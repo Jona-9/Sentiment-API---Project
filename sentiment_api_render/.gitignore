@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.env
+.venv/
+
+# VSCode
+.vscode/
+
+# Modelos y datos
+# *.joblib  # Comentado: el modelo debe subirse para Render
+*.csv
+*.xlsx
+
+# Otros
+*.log
+*.tmp

@@ -1,0 +1,187 @@
+================================================================================
+                    RESUMEN DEL PROYECTO - SentimentAPI
+              Ultima actualizacion: 7 de Febrero de 2026
+================================================================================
+
+ARQUITECTURA DEL SISTEMA (PRODUCCION)
+--------------------------------------------------------------------------------
+| Componente        | URL / Ubicación                                | Estado    |
+|-------------------|------------------------------------------------|-----------|
+| Frontend React    | https://sentiment-dashboard-pi.vercel.app      | Desplegado|
+| Backend Java      | https://sentiment-backend-java-production.up.railway.app | Desplegado|
+| API Python (ML)   | https://sentiment-api-render.onrender.com      | Desplegado|
+| PostgreSQL        | Render: dpg-d5vdmql6ubrc73cd72ig-a.oregon...   | Desplegado|
+--------------------------------------------------------------------------------
+
+REPOSITORIOS GITHUB
+--------------------------------------------------------------------------------
+| Componente        | Repositorio                                              |
+|-------------------|----------------------------------------------------------|
+| Frontend React    | github.com/GustavoVasquezS/sentiment-dashboard           |
+| Backend Java      | github.com/GustavoVasquezS/sentiment-backend-java        |
+| API Python (ML)   | github.com/GustavoVasquezS/sentiment_api_render (o Jona-9/SentimentAPI original) |
+--------------------------------------------------------------------------------
+
+PLATAFORMAS DE DEPLOY
+--------------------------------------------------------------------------------
+| Componente        | Plataforma | Plan     |
+|-------------------|------------|----------|
+| Frontend React    | Vercel     | Free     |
+| Backend Java      | Railway    | Free     |
+| API Python (ML)   | Render     | Free     |
+| PostgreSQL        | Render     | Free     |
+--------------------------------------------------------------------------------
+
+================================================================================
+CAMBIOS REALIZADOS EN ESTA SESION
+================================================================================
+
+BACKEND JAVA (sentiment_backend_java)
+--------------------------------------------------------------------------------
+
+1. NUEVOS ARCHIVOS CREADOS:
+   - CsvUploadRequestDto.java 
+     * DTO con inner class CsvRowDto (categoria, producto, comentario)
+   
+   - CsvAnalysisResponseDto.java 
+     * Respuesta con CategoriaAnalisisDto, ProductoAnalisisDto
+   
+   - CsvAnalysisController.java 
+     * POST /csv/analizar
+     * GET /csv/comparativa-productos
+     * GET /csv/comparativa-categorias
+   
+   - CsvAnalysisService.java - Interface
+   
+   - CsvAnalysisServiceImplement.java - Implementacion completa
+
+2. REPOSITORIOS MODIFICADOS:
+   - CategoriaRepository.java
+     * Agregado: findByUsuario()
+     * Agregado: findByNombreCategoriaIgnoreCaseAndUsuario()
+   
+   - ProductoRepository.java
+     * Agregado: findByUsuario()
+     * Agregado: findByNombreProductoIgnoreCaseAndCategoriaAndUsuario()
+
+3. BUG CORREGIDO:
+   - SentimentServiceImplement.java
+     * Cambiado /sentiment/batch -> /predict/batch
+     * Cambiado /sentiment -> /predict
+
+FRONTEND REACT (sentiment_dashboard)
+--------------------------------------------------------------------------------
+
+1. App.js - REESCRITO COMPLETAMENTE CON:
+   - Tab "Cargar CSV" - Upload, preview, analisis
+   - Tab "Comparativas" - Graficos de productos y categorias
+   - Tab "Historial" - Sesiones persistentes desde BD
+   - Exportacion CSV y PDF
+   - Nuevos estados: csvData, csvAnalysisResult, historialPersistente,
+     comparativaProductos, comparativaCategorias
+
+2. ARCHIVO DE PRUEBA CREADO:
+   - test_data.csv - 48 comentarios en 4 categorias:
+     * Electronicos (iPhone 15 Pro, Samsung Galaxy S24, MacBook Pro M3)
+     * Ropa (Nike Air Max, Adidas Ultraboost, Levi's 501)
+     * Hogar (Dyson V15, Instant Pot, Roomba i7)
+     * Belleza (Dyson Airwrap, Olaplex No.3)
+
+================================================================================
+CREDENCIALES DE PRUEBA
+================================================================================
+
+USUARIO DE PRUEBA:
+   Email: testcsv@test.com
+   Password: test123
+
+BASE DE DATOS POSTGRESQL (Render):
+   Host: dpg-d5vdmql6ubrc73cd72ig-a.oregon-postgres.render.com
+   Database: sentiment_db_ay8e
+   Username: sentiment_db_ay8e_user
+   Password: REXGv3PExiH2DuU4OV1MdBZ0sufnQSOH
+
+================================================================================
+ENDPOINTS API (PRODUCCION)
+================================================================================
+
+BACKEND JAVA (https://sentiment-backend-java-production.up.railway.app/project/api/v2)
+--------------------------------------------------------------------------------
+POST /usuario/login              - Login (devuelve JWT)
+POST /usuario                    - Registro de usuario
+POST /csv/analizar               - Procesar CSV con categorias/productos
+GET  /csv/comparativa-productos  - Estadisticas por producto
+GET  /csv/comparativa-categorias - Estadisticas por categoria
+GET  /sesion/historial           - Historial persistente del usuario
+POST /sentiment/analyze          - Analisis individual via backend
+POST /sentiment/analyze/batch    - Analisis batch via backend
+
+API PYTHON (https://sentiment-api-render.onrender.com)
+--------------------------------------------------------------------------------
+GET  /health        - Health check del modelo
+POST /predict       - Analisis de sentimiento individual
+POST /predict/batch - Analisis de sentimiento por lotes
+
+================================================================================
+VARIABLES DE ENTORNO (PRODUCCION)
+================================================================================
+
+VERCEL (Frontend):
+   REACT_APP_JAVA_API_URL=https://sentiment-backend-java-production.up.railway.app/project/api/v2
+   REACT_APP_PYTHON_API_URL=https://sentiment-api-render.onrender.com
+
+RAILWAY (Backend Java):
+   SPRING_DATASOURCE_URL=jdbc:postgresql://dpg-d5vdmql6ubrc73cd72ig-a.oregon-postgres.render.com:5432/sentiment_db_ay8e
+   SPRING_DATASOURCE_USERNAME=sentiment_db_ay8e_user
+   SPRING_DATASOURCE_PASSWORD=REXGv3PExiH2DuU4OV1MdBZ0sufnQSOH
+   CONFIG_URL=https://sentiment-api-render.onrender.com
+   JWT_SECRET=sentimentApiSecretKey2026HackathonOneNoCountry
+   JWT_EXPIRATION=86400000
+   PORT=8080
+
+================================================================================
+COMPLETADO - SESION 7 FEB 2026
+================================================================================
+
+1. [OK] Probado flujo completo localmente (CSV, comparativas, historial)
+2. [OK] Backend Java desplegado en Railway (Dockerfile multi-stage)
+3. [OK] Frontend React desplegado en Vercel (env vars configuradas)
+4. [OK] CORS configurado para produccion (vercel.app, railway.app, onrender.com)
+5. [OK] application.properties con env vars y fallbacks para dev local
+
+================================================================================
+RUTAS DE LOS PROYECTOS
+================================================================================
+
+API Python:      c:\Users\light\Documents\GitHub\sentiment_api_render
+Backend Java:    c:\Users\light\Documents\GitHub\sentiment_backend_java
+Frontend React:  c:\Users\light\Documents\GitHub\sentiment_dashboard
+
+================================================================================
+COMANDOS UTILES
+================================================================================
+
+# Verificar si el backend Java esta corriendo:
+try { Invoke-WebRequest -Uri "http://localhost:8080/project/api/v2/usuario" } catch { $_.Exception.Response.StatusCode }
+
+# Verificar si el frontend esta corriendo:
+Invoke-WebRequest -Uri "http://localhost:3000"
+
+# Compilar backend Java:
+cd c:\Users\light\Documents\GitHub\sentiment_backend_java
+.\mvnw.cmd clean compile
+
+# Ejecutar backend Java:
+.\mvnw.cmd spring-boot:run
+
+# Ejecutar frontend React:
+cd c:\Users\light\Documents\GitHub\sentiment_dashboard
+npm start
+
+# Probar API Python:
+$body = '{"texts": ["Excelente producto", "Muy malo"]}'
+Invoke-RestMethod -Uri "https://sentiment-api-render.onrender.com/predict/batch" -Method Post -Body $body -ContentType "application/json"
+
+================================================================================
+                         FIN DEL RESUMEN
+================================================================================
