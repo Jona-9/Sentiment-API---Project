@@ -50,7 +50,7 @@ public class SesionRepositoryAdapter implements SesionRepositoryPort {
 
     @Override
     public List<Sesion> buscarPorUsuario(Integer usuarioId) {
-        return sesionJpaRepository.findByUsuarioUsuarioID(usuarioId).stream()
+        return sesionJpaRepository.findByUsuarioUsuarioIDOrderByFechaDescSesionIdDesc(usuarioId).stream()
                 .map(this::entityToDomain)
                 .collect(Collectors.toList());
     }

@@ -6,6 +6,7 @@ import com.project.sentimentapi.infrastructure.persistence.repository.CategoriaJ
 import com.project.sentimentapi.infrastructure.persistence.repository.UsuarioJpaRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,9 @@ import java.util.Map;
 
 // DebugController movido a presentation/; mantiene referencias legacy temporalmente.
 // Pendiente de migración: reemplazar UserRepository/CategoriaRepository por use cases de dominio.
+// @Profile("!prod"): existe en local/dev por defecto, pero NO se registra cuando el perfil
+// "prod" está activo (spring.profiles.active=prod), para no exponer endpoints de debug/seed.
+@Profile("!prod")
 @RestController
 @RequestMapping("/debug")
 @RequiredArgsConstructor

@@ -62,9 +62,13 @@ const HistoryView = ({ user, token, setCurrentView, handleLogout, onLoadSession 
   };
 
   const processData = (data) => {
-    // Guardar sesiones crudas para "Ver análisis" — invertir para orden cronológico (más antigua primero)
-    const chronological = [...data].reverse();
-    setRawSessions(chronological);
+    // Ordenar SIEMPRE por la fecha real; no asumir el orden con que llega el backend.
+    // asc = antigua→reciente (ideal para el eje X del gráfico de tendencia).
+    const asc = [...data].sort((a, b) =>
+      new Date(a.date || a.fecha) - new Date(b.date || b.fecha));
+    // forTable = reciente→antigua (lo natural para leer una tabla de historial).
+    const forTable = [...asc].reverse();
+    setRawSessions(forTable);
 
     // 1. Calcular Estadísticas Globales
     const totalSesiones = data.length;
@@ -89,8 +93,8 @@ const HistoryView = ({ user, token, setCurrentView, handleLogout, onLoadSession 
       ultimaCarga: lastDate
     });
 
-    // 2. Preparar Datos para el Gráfico — % de sentimiento por sesión
-    const chartData = chronological.map((session, index) => {
+    // 2. Preparar Datos para el Gráfico — % de sentimiento por sesión (orden ascendente por fecha)
+    const chartData = asc.map((session, index) => {
       const total = session.total || 1;
       const pos = session.positivos || 0;
       const neg = session.negativos || 0;

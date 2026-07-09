@@ -301,4 +301,32 @@ export const sentimentService = {
       throw error;
     }
   },
+
+  /**
+   * Obtiene el DETALLE de una sesión (incluye los comentarios guardados en BD).
+   * El listado GET /sesiones solo trae estadísticas; este endpoint sí trae `comentarios`.
+   * @param {number} sessionId - ID de la sesión
+   * @param {string} token - JWT token del usuario autenticado
+   */
+  async getSessionById(sessionId, token) {
+    try {
+      const response = await fetch(`${API_ENDPOINTS.GET_SESSIONS}/${sessionId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) throw new Error('No autorizado');
+        if (response.status === 404) throw new Error('Sesión no encontrada');
+        throw new Error('Error al obtener el detalle de la sesión');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error en getSessionById:', error);
+      throw error;
+    }
+  },
 };

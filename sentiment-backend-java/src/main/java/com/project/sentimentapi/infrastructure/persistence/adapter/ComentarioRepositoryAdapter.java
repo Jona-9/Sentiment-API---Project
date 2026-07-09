@@ -33,6 +33,7 @@ public class ComentarioRepositoryAdapter implements ComentarioRepositoryPort {
                 comentario.getTexto(),
                 comentario.getSentimiento(),
                 comentario.getProbabilidad(),
+                comentario.getProducto(),
                 sesion
         );
         return entityToDomain(comentarioJpaRepository.save(entity));
@@ -46,7 +47,7 @@ public class ComentarioRepositoryAdapter implements ComentarioRepositoryPort {
                             .orElseThrow(() -> new IllegalArgumentException(
                                     "Sesión no encontrada con id: " + c.getSesionId()));
                     return new ComentarioJpaEntity(
-                            c.getTexto(), c.getSentimiento(), c.getProbabilidad(), sesion);
+                            c.getTexto(), c.getSentimiento(), c.getProbabilidad(), c.getProducto(), sesion);
                 })
                 .collect(Collectors.toList());
         return comentarioJpaRepository.saveAll(entities).stream()
@@ -67,7 +68,8 @@ public class ComentarioRepositoryAdapter implements ComentarioRepositoryPort {
                 entity.getTexto(),
                 entity.getSentimiento(),
                 entity.getProbabilidad(),
-                entity.getSesion() != null ? entity.getSesion().getSesionId() : null
+                entity.getSesion() != null ? entity.getSesion().getSesionId() : null,
+                entity.getProducto()
         );
     }
 }

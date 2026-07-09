@@ -29,11 +29,9 @@ public class SesionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerSesion(@PathVariable Integer id) {
-        SesionDto sesion = consultarUseCase.obtenerPorId(id);
-        if (sesion == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(sesion);
+    public ResponseEntity<SesionDto> obtenerSesion(@PathVariable Integer id) {
+        // obtenerPorId lanza SesionNoEncontradaException (→ 404 vía GlobalExceptionHandler)
+        // cuando no existe; nunca devuelve null.
+        return ResponseEntity.ok(consultarUseCase.obtenerPorId(id));
     }
 }
