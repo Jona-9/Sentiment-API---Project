@@ -17,7 +17,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // Usa UsuarioJpaRepository (infrastructure) en lugar de UserRepository (legacy)
     @Autowired
     private UsuarioJpaRepository usuarioJpaRepository;
 
@@ -29,10 +28,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         System.out.println("JWT Filter - Path: " + requestPath + " | Method: " + method);
 
+        // CORRECCIÓN: antes usaba "/usuario/login" (singular, sin prefijo /api)
+        // pero el controller está en @RequestMapping("/api/usuarios") → plural con /api/
+        // Resultado: el filtro nunca reconocía login ni registro como rutas públicas → 401.
         boolean isPublicRoute =
-                requestPath.contains("/usuario/login") ||
-                        (requestPath.contains("/usuario") && "POST".equals(method) &&
-                                !requestPath.contains("/login")) ||
+                requestPath.contains("/api/usuarios/login") ||
+                        requestPath.contains("/api/usuarios/registro") ||
+                        requestPath.contains("/api/usuarios/forgot-password") ||
+                        requestPath.contains("/api/usuarios/reset-password") ||
                         requestPath.contains("/sentiment/analyze") ||
                         requestPath.contains("/debug/health");
 

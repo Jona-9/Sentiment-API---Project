@@ -1,7 +1,7 @@
 package com.project.sentimentapi.presentation.controller;
 
 import com.project.sentimentapi.domain.port.in.GestionarCategoriaUseCase;
-import com.project.sentimentapi.dto.CategoriaDto;
+import com.project.sentimentapi.presentation.dto.response.CategoriaDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 // ISP: CategoriaController solo depende de GestionarCategoriaUseCase
 @RestController
-@RequestMapping("/api/categorias")
+@RequestMapping("/categorias")
 @RequiredArgsConstructor
 public class CategoriaController {
 

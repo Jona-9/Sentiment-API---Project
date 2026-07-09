@@ -50,6 +50,16 @@ public class SecurityConfig {
     public FilterRegistrationBean<JwtAuthenticationFilter> jwtFilterRegistration() {
         FilterRegistrationBean<JwtAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(jwtAuthenticationFilter);
+
+        // CORRECCIÓN: antes solo cubría "/api/usuarios/*", "/sentiment/*", "/sesion/*"
+        // (sin 's' en sesion, y sin /csv/* ni /sesiones/*), por lo que el filtro
+        // nunca procesaba esas rutas → el token no se validaba → usuarioId nunca
+        // se seteaba en el request → los controllers devolvían 401 o 500.
+        //
+        // Solución: aplicar el filtro a TODAS las rutas ("/*") y dejar que
+        // JwtAuthenticationFilter.isPublicRoute() decida internamente qué rutas
+        // no requieren token. Así no hay que sincronizar esta lista cada vez que
+        // se agrega un controller nuevo.
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
         return registrationBean;

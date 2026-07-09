@@ -151,28 +151,12 @@ const AppContent = () => {
           }
 
           if (user && !isDemo && user.token) {
-            // Usuario logueado → guardar sesión en historial
+            // Usuario logueado → reutilizar analyzeCsvBatch con entradas sin producto/categoría
+            // (evita depender de un endpoint /sesiones/analizar que no existe en el backend)
             console.log('📝 Analizando texto manual con', comentarios.length, 'comentarios (guardando sesión)');
-            const result = await sentimentService.analyzeAndSave(comentarios, user.token);
-            setResults({
-              isBatch: true,
-              totalAnalyzed: result.total || comentarios.length,
-              sessionSaved: true,
-              sessionId: result.sessionId,
-              items: (result.comentarios || []).map(c => ({
-                text: c.text || c.texto,
-                sentiment: c.sentiment || c.sentimiento,
-                score: c.score || c.probabilidad,
-                productoAsociado: c.productoAsociado || null,
-              })),
-              stats: {
-                avgScore: result.avgScore || 0,
-                positivos: result.positivos || 0,
-                negativos: result.negativos || 0,
-                neutrales: result.neutrales || 0,
-              },
-              productosDetectados: result.productosDetectados || []
-            });
+            const entradas = comentarios.map(texto => ({ texto, producto: '', categoria: '' }));
+            const result = await sentimentService.analyzeCsvBatch(entradas, user.token);
+            setResults(result);
           } else {
             // Modo demo o sin login → análisis sin guardar
             const result = await sentimentService.analyzeBatch(text);

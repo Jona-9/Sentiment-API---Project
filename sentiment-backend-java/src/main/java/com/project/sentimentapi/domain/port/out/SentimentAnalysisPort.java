@@ -1,6 +1,6 @@
 package com.project.sentimentapi.domain.port.out;
 
-import com.project.sentimentapi.dto.SentimentsResponseDto;
+import com.project.sentimentapi.presentation.dto.response.SentimentsResponseDto;
 
 import java.util.List;
 import java.util.Optional;

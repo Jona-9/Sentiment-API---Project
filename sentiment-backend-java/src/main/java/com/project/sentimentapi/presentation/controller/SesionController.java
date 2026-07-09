@@ -1,7 +1,7 @@
 package com.project.sentimentapi.presentation.controller;
 
 import com.project.sentimentapi.domain.port.in.ConsultarSesionesUseCase;
-import com.project.sentimentapi.dto.SesionDto;
+import com.project.sentimentapi.presentation.dto.response.SesionDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import java.util.List;
 // El guardado de sesiones ocurre internamente vía AnalizarCsvUseCase,
 // por lo que SesionController no necesita GuardarSesionUseCase.
 @RestController
-@RequestMapping("/api/sesiones")
+@RequestMapping("/sesiones")
 @RequiredArgsConstructor
 public class SesionController {
 

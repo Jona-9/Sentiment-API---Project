@@ -1,7 +1,7 @@
 package com.project.sentimentapi.application.mapper;
 
 import com.project.sentimentapi.domain.model.Producto;
-import com.project.sentimentapi.dto.ProductoDto;
+import com.project.sentimentapi.presentation.dto.response.*;
 
 public class ProductoMapper {
 

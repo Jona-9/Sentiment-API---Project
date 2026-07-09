@@ -1,8 +1,7 @@
 package com.project.sentimentapi.application.mapper;
 
 import com.project.sentimentapi.domain.model.Sesion;
-import com.project.sentimentapi.dto.SesionDto;
-
+import com.project.sentimentapi.presentation.dto.response.*;
 public class SesionMapper {
 
     private SesionMapper() {}

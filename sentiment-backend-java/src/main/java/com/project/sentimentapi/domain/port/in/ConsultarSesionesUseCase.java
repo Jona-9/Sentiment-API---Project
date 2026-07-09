@@ -1,6 +1,6 @@
 package com.project.sentimentapi.domain.port.in;
 
-import com.project.sentimentapi.dto.SesionDto;
+import com.project.sentimentapi.presentation.dto.response.SesionDto;
 
 import java.util.List;
 

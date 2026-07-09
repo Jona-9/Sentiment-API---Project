@@ -1,8 +1,8 @@
 package com.project.sentimentapi.presentation.controller;
 
 import com.project.sentimentapi.domain.port.in.AnalizarCsvUseCase;
-import com.project.sentimentapi.dto.CsvAnalysisResponseDto;
-import com.project.sentimentapi.dto.CsvEntradaDto;
+import com.project.sentimentapi.presentation.dto.response.CsvAnalysisResponseDto;
+import com.project.sentimentapi.presentation.dto.request.CsvEntradaDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// ISP: solo inyecta AnalizarCsvUseCase, no una interfaz genérica de análisis
 @RestController
-@RequestMapping("/api/csv")
+@RequestMapping("/csv")
 @RequiredArgsConstructor
 public class CsvAnalysisController {
 
@@ -32,6 +31,12 @@ public class CsvAnalysisController {
             CsvAnalysisResponseDto resultado = analizarUseCase.analizar(filas, usuarioId);
             return ResponseEntity.ok(resultado);
         } catch (RuntimeException e) {
+            // LOG TEMPORAL para diagnosticar — ver stack trace completo en consola de IntelliJ
+            System.err.println("=== ERROR en /csv/analizar ===");
+            System.err.println("Mensaje: " + e.getMessage());
+            System.err.println("Causa: " + (e.getCause() != null ? e.getCause().getMessage() : "ninguna"));
+            e.printStackTrace();
+            System.err.println("==============================");
             return ResponseEntity.status(500).body("Error al analizar CSV: " + e.getMessage());
         }
     }
