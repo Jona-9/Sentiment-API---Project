@@ -1,5 +1,5 @@
 // src/App.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Landing from './views/Landing';
 import Auth from './views/Auth';
@@ -35,6 +35,9 @@ const AppContent = () => {
   
   const [text, setText] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
+  // Guard SÍNCRONO contra doble-submit: setAnalyzing es asíncrono, así que un doble-clic rápido
+  // pasaría el disabled={analyzing} y dispararía dos POST → dos sesiones duplicadas.
+  const analyzingRef = useRef(false);
   const [results, setResults] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [pendingHistoricalSession, setPendingHistoricalSession] = useState(null);
@@ -70,8 +73,20 @@ const AppContent = () => {
   }, [location.pathname]);
 
   // Cargar una sesión histórica como resultados y navegar a la vista de análisis
-  const loadSessionFromHistory = (session) => {
-    const items = (session.comentarios || []).map(c => ({
+  const loadSessionFromHistory = async (session) => {
+    // La fila del listado (GET /sesiones) NO trae comentarios; hay que pedir el detalle
+    // (GET /sesiones/{id}) que sí los incluye. Si falla, se cae a la fila del listado.
+    let detalle = session;
+    if (session?.sessionId && user?.token) {
+      try {
+        detalle = await sentimentService.getSessionById(session.sessionId, user.token);
+      } catch (err) {
+        console.error('No se pudo cargar el detalle de la sesión, usando resumen:', err);
+        detalle = session;
+      }
+    }
+
+    const items = (detalle.comentarios || []).map(c => ({
       text: c.texto,
       sentiment: c.sentimiento,
       score: c.probabilidad,
@@ -99,8 +114,10 @@ const AppContent = () => {
   };
 
   const analyzeSentiment = async (csvEntradas = null) => {
+    if (analyzingRef.current) return; // ya hay un análisis en curso → ignorar re-entrada
     if (!text.trim() && !csvEntradas) return;
-    
+
+    analyzingRef.current = true;
     setAnalyzing(true);
     setErrorMessage('');
     
@@ -174,6 +191,7 @@ const AppContent = () => {
       setResults(null);
     } finally {
       setAnalyzing(false);
+      analyzingRef.current = false; // libera el guard (también cubre los early-return dentro del try)
     }
   };
 

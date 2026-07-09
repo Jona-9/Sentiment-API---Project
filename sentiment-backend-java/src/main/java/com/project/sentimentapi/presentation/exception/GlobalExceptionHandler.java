@@ -1,6 +1,7 @@
 package com.project.sentimentapi.presentation.exception;
 
 import com.project.sentimentapi.domain.exception.SentimentApiException;
+import com.project.sentimentapi.domain.exception.SesionNoEncontradaException;
 import com.project.sentimentapi.domain.exception.TokenExpiradoException;
 import com.project.sentimentapi.domain.exception.UsuarioNoEncontradoException;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,16 @@ public class GlobalExceptionHandler {
                 "timestamp", LocalDateTime.now(),
                 "status", 404,
                 "error", "Usuario no encontrado",
+                "message", ex.getMessage()
+        ));
+    }
+
+    @ExceptionHandler(SesionNoEncontradaException.class)
+    public ResponseEntity<Map<String, Object>> handleSesionNoEncontrada(SesionNoEncontradaException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                "timestamp", LocalDateTime.now(),
+                "status", 404,
+                "error", "Sesión no encontrada",
                 "message", ex.getMessage()
         ));
     }

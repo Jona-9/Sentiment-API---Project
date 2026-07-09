@@ -24,15 +24,20 @@ public class ComentarioJpaEntity {
     @Column(name = "probabilidad", nullable = false)
     private Double probabilidad;
 
+    // Nombre del producto asociado al comentario (nullable: comentarios sin producto/históricos previos)
+    @Column(name = "producto")
+    private String producto;
+
     @ManyToOne
     @JoinColumn(name = "sesion_id", nullable = false)
     private SesionJpaEntity sesion;
 
     public ComentarioJpaEntity(String texto, String sentimiento,
-                                Double probabilidad, SesionJpaEntity sesion) {
+                                Double probabilidad, String producto, SesionJpaEntity sesion) {
         this.texto = texto;
         this.sentimiento = sentimiento;
         this.probabilidad = probabilidad;
+        this.producto = producto;
         this.sesion = sesion;
     }
 }

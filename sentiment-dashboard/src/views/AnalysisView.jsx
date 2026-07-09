@@ -7,6 +7,17 @@ import {
 } from 'lucide-react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
+// Configuración responsiva del eje X de "Sentimientos por Producto".
+// Ajusta ángulo, fuente, alto reservado y truncado del nombre según cuántos
+// productos haya, para que las etiquetas no se aglomeren sin importar la cantidad.
+const getProductAxisConfig = (n) => {
+  if (n <= 4)  return { angle: 0,   textAnchor: 'middle', height: 30,  fontSize: 12, maxLabelLen: 15 };
+  if (n <= 8)  return { angle: -25, textAnchor: 'end',    height: 60,  fontSize: 12, maxLabelLen: 14 };
+  if (n <= 14) return { angle: -45, textAnchor: 'end',    height: 80,  fontSize: 11, maxLabelLen: 12 };
+  if (n <= 24) return { angle: -60, textAnchor: 'end',    height: 95,  fontSize: 10, maxLabelLen: 9  };
+  return              { angle: -90, textAnchor: 'end',    height: 110, fontSize: 9,  maxLabelLen: 7  };
+};
+
 const AnalysisView = ({
   currentView, setCurrentView, user, isDemo, handleLogout, handleBackToLanding,
   isBatchMode, text, setText, analyzing, analyzeSentiment, results, setResults,
@@ -285,8 +296,9 @@ const AnalysisView = ({
 
   const getStackedProductSentimentData = () => {
     const productStats = calculateProductStats();
+    const { maxLabelLen } = getProductAxisConfig(productStats.length);
     return productStats.map(p => ({
-      producto: p.name.length > 15 ? p.name.substring(0, 14) + '…' : p.name,
+      producto: p.name.length > maxLabelLen ? p.name.substring(0, maxLabelLen - 1) + '…' : p.name,
       productoFull: p.name,
       Positivo: p.positivo,
       Neutral: p.neutral,
@@ -365,7 +377,8 @@ const AnalysisView = ({
     const pieDataByProduct = getPieDataByProduct();
     const hasProductData = results.productosDetectados && results.productosDetectados.length > 0;
     const stackedData = getStackedProductSentimentData();
-    
+    const axisCfg = getProductAxisConfig(stackedData.length);
+
     return (
       <div className="mt-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-xl rounded-2xl p-8 border-2 border-cyan-500/30">
@@ -464,10 +477,10 @@ const AnalysisView = ({
               <h4 className="text-xl font-bold text-white">Sentimientos por Producto</h4>
             </div>
             
-            <ResponsiveContainer width="100%" height={350}>
+            <ResponsiveContainer width="100%" height={350 + Math.max(0, axisCfg.height - 60)}>
               <BarChart data={stackedData} barCategoryGap="20%">
                 <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                <XAxis dataKey="producto" stroke="#9ca3af" tick={{ fill: '#9ca3af', fontSize: 12 }} axisLine={false} tickLine={false} interval={0} angle={stackedData.length > 4 ? -25 : 0} textAnchor={stackedData.length > 4 ? 'end' : 'middle'} height={stackedData.length > 4 ? 60 : 30} />
+                <XAxis dataKey="producto" stroke="#9ca3af" tick={{ fill: '#9ca3af', fontSize: axisCfg.fontSize }} axisLine={false} tickLine={false} interval={0} angle={axisCfg.angle} textAnchor={axisCfg.textAnchor} height={axisCfg.height} />
                 <YAxis stroke="#9ca3af" tick={{ fill: '#9ca3af', fontSize: 12 }} axisLine={false} tickLine={false} allowDecimals={false} label={{ value: 'Comentarios', angle: -90, position: 'insideLeft', fill: '#9ca3af', fontSize: 12 }} />
                 <Tooltip 
                   content={({ active, payload, label }) => {

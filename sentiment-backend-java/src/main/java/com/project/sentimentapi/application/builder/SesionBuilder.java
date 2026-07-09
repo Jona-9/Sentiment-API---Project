@@ -1,11 +1,12 @@
 package com.project.sentimentapi.application.builder;
 
 import com.project.sentimentapi.domain.model.Sesion;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Component
+// Patrón BUILDER (GoF): NO es un bean singleton de Spring. Se instancia con `new` por cada
+// construcción para que el estado mutable no se comparta entre hilos HTTP concurrentes
+// (dos usuarios analizando a la vez mezclaban datos cuando esto era un @Component).
 public class SesionBuilder {
 
     private Integer usuarioId;

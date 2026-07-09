@@ -1,6 +1,7 @@
 package com.project.sentimentapi.application.usecase;
 
 import com.project.sentimentapi.application.mapper.SesionMapper;
+import com.project.sentimentapi.domain.exception.SesionNoEncontradaException;
 import com.project.sentimentapi.domain.model.Comentario;
 import com.project.sentimentapi.domain.model.Sesion;
 import com.project.sentimentapi.domain.port.in.ConsultarSesionesUseCase;
@@ -39,7 +40,7 @@ public class ConsultarSesionesUseCaseImpl implements ConsultarSesionesUseCase {
     @Transactional(readOnly = true)
     public SesionDto obtenerPorId(Integer sesionId) {
         Sesion sesion = sesionPort.buscarPorId(sesionId)
-                .orElseThrow(() -> new RuntimeException("Sesión no encontrada con id: " + sesionId));
+                .orElseThrow(() -> new SesionNoEncontradaException(sesionId));
 
         SesionDto dto = SesionMapper.toDto(sesion);
 
@@ -47,7 +48,7 @@ public class ConsultarSesionesUseCaseImpl implements ConsultarSesionesUseCase {
         // "Ver análisis" del historial pueda mostrar el detalle de cada comentario
         List<Comentario> comentarios = comentarioPort.buscarPorSesion(sesionId);
         List<ComentarioDto> comentariosDto = comentarios.stream()
-                .map(c -> new ComentarioDto(c.getTexto(), c.getSentimiento(), c.getProbabilidad()))
+                .map(c -> new ComentarioDto(c.getTexto(), c.getSentimiento(), c.getProbabilidad(), c.getProducto()))
                 .collect(Collectors.toList());
 
         dto.setComentarios(comentariosDto);

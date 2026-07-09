@@ -35,20 +35,17 @@ public class AnalizarCsvUseCaseImpl implements AnalizarCsvUseCase {
     private final ProductoRepositoryPort productoPort;
     private final CategoriaRepositoryPort categoriaPort;
     private final SesionRepositoryPort sesionPort;
-    private final SesionBuilder sesionBuilder;
     private final ComentarioRepositoryPort comentarioPort;
 
     public AnalizarCsvUseCaseImpl(SentimentAnalysisPort sentimentPort,
                                   ProductoRepositoryPort productoPort,
                                   CategoriaRepositoryPort categoriaPort,
                                   SesionRepositoryPort sesionPort,
-                                  SesionBuilder sesionBuilder,
                                   ComentarioRepositoryPort comentarioPort) {
         this.sentimentPort = sentimentPort;
         this.productoPort = productoPort;
         this.categoriaPort = categoriaPort;
         this.sesionPort = sesionPort;
-        this.sesionBuilder = sesionBuilder;
         this.comentarioPort = comentarioPort;
     }
 
@@ -100,13 +97,14 @@ public class AnalizarCsvUseCaseImpl implements AnalizarCsvUseCase {
             acumular(contadoresProd, prodKey, sentimiento);
             acumular(contadoresCat,  catKey,  sentimiento);
 
-            comentariosDto.add(new ComentarioDto(fila.getTexto(), sentimiento, prob));
+            comentariosDto.add(new ComentarioDto(fila.getTexto(), sentimiento, prob, productoNombre(fila)));
         }
 
         double avgScore = total > 0 ? sumaScores / total : 0.0;
 
         // PASO 4: Construir y guardar la sesión (Patrón BUILDER)
-        Sesion sesion = sesionBuilder.reset()
+        // Builder local (no compartido) → seguro ante análisis concurrentes de varios usuarios.
+        Sesion sesion = new SesionBuilder()
                 .conUsuario(usuarioId)
                 .conFecha(LocalDateTime.now())
                 .conTotalComentarios(total)
@@ -126,7 +124,8 @@ public class AnalizarCsvUseCaseImpl implements AnalizarCsvUseCase {
                     fila.getTexto(),
                     resultado.getPrevision(),
                     resultado.getProbabilidad() != null ? resultado.getProbabilidad() : 0.0,
-                    sesionGuardada.getId()
+                    sesionGuardada.getId(),
+                    productoNombre(fila)
             ));
         }
         comentarioPort.guardarTodos(comentariosDominio);
@@ -147,6 +146,13 @@ public class AnalizarCsvUseCaseImpl implements AnalizarCsvUseCase {
     }
 
     // ── Métodos privados de apoyo ────────────────────────────────────────────
+
+    // Normaliza el nombre del producto de una fila: trim, y blank/null → null
+    private String productoNombre(CsvEntradaDto fila) {
+        return fila.getProducto() != null && !fila.getProducto().isBlank()
+                ? fila.getProducto().trim()
+                : null;
+    }
 
     private void acumular(Map<String, int[]> mapa, String key, String sentimiento) {
         int[] c = mapa.computeIfAbsent(key, k -> new int[4]);
