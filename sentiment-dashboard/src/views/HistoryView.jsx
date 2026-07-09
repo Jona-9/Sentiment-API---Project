@@ -112,16 +112,9 @@ const HistoryView = ({ user, token, setCurrentView, handleLogout, onLoadSession 
     setHistoryData(chartData);
   };
 
-  // Datos simulados para vista previa
-  const mockChartData = [
-    { name: '#1', Positivo: 60, Neutral: 25, Negativo: 15, totalComentarios: 20, fecha: '10/02/2026' },
-    { name: '#2', Positivo: 45, Neutral: 30, Negativo: 25, totalComentarios: 30, fecha: '11/02/2026' },
-    { name: '#3', Positivo: 70, Neutral: 15, Negativo: 15, totalComentarios: 25, fecha: '12/02/2026' },
-    { name: '#4', Positivo: 55, Neutral: 20, Negativo: 25, totalComentarios: 18, fecha: '13/02/2026' },
-    { name: '#5', Positivo: 75, Neutral: 15, Negativo: 10, totalComentarios: 22, fecha: '14/02/2026' },
-  ];
-
-  const displayData = historyData.length > 0 ? historyData : mockChartData;
+  // La gráfica solo muestra datos reales del usuario autenticado.
+  // Un usuario nuevo (sin sesiones) verá un estado vacío, no datos simulados.
+  const hasChartData = historyData.length > 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1a0b2e] via-[#2d1b4e] to-[#1a0b2e] p-6">
@@ -209,8 +202,22 @@ const HistoryView = ({ user, token, setCurrentView, handleLogout, onLoadSession 
           <p className="text-purple-400 text-sm mb-6">Porcentaje de comentarios positivos, neutrales y negativos en cada análisis</p>
           
           <div className="h-[400px] w-full">
+            {loading ? (
+              <div className="h-full w-full flex flex-col items-center justify-center text-purple-300">
+                <Loader2 className="w-10 h-10 animate-spin mb-4" />
+                <p>Cargando evolución...</p>
+              </div>
+            ) : !hasChartData ? (
+              <div className="h-full w-full flex flex-col items-center justify-center text-center px-6">
+                <div className="p-4 bg-purple-500/10 rounded-2xl mb-4">
+                  <TrendingUp className="w-10 h-10 text-purple-400/60" />
+                </div>
+                <p className="text-white font-semibold text-lg mb-1">Aún no hay sesiones analizadas</p>
+                <p className="text-purple-400 text-sm max-w-sm">Analiza tu primer CSV para ver aquí la evolución del sentimiento por sesión.</p>
+              </div>
+            ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={displayData} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
+              <AreaChart data={historyData} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
                 <defs>
                   <linearGradient id="gradPositivo" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
@@ -292,6 +299,7 @@ const HistoryView = ({ user, token, setCurrentView, handleLogout, onLoadSession 
                 />
               </AreaChart>
             </ResponsiveContainer>
+            )}
           </div>
         </div>
 
