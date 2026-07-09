@@ -1,9 +1,10 @@
 package com.project.sentimentapi.domain.port.in;
 
-import com.project.sentimentapi.dto.ProductoDto;
-import com.project.sentimentapi.dto.ProductoRequestDto;
+import com.project.sentimentapi.presentation.dto.request.ProductoRequestDto;
+import com.project.sentimentapi.presentation.dto.response.ProductoDto;
 
 import java.util.List;
+
 
 public interface GestionarProductoUseCase {
     ProductoDto crearProducto(ProductoRequestDto request, Integer usuarioId);

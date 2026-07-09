@@ -1,8 +1,9 @@
 package com.project.sentimentapi.domain.port.in;
 
-import com.project.sentimentapi.dto.CategoriaDto;
+import com.project.sentimentapi.presentation.dto.response.CategoriaDto;
 
 import java.util.List;
+
 
 public interface GestionarCategoriaUseCase {
     CategoriaDto crearCategoria(String nombreCategoria, String descripcion, Integer usuarioId);

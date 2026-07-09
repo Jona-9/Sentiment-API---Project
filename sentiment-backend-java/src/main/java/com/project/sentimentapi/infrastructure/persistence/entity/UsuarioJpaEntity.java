@@ -40,11 +40,16 @@ public class UsuarioJpaEntity {
     @Column(name = "token_expiry")
     private LocalDateTime tokenExpiry;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // CORRECCIÓN: CascadeType.ALL incluye PERSIST y REMOVE sobre los roles,
+    // lo que hace que Hibernate intente insertar roles ya existentes (detached)
+    // y falle con "Detached entity passed to persist".
+    // Con MERGE + REFRESH solo se sincronizan los datos — nunca se crean ni eliminan roles
+    // al guardar un usuario.
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinTable(
-        name = "User_rol",
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "usuario_id"),
-        inverseJoinColumns = @JoinColumn(name = "rol_Id", referencedColumnName = "rol_id")
+            name = "User_rol",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "rol_Id", referencedColumnName = "rol_id")
     )
     private List<RolJpaEntity> rol;
 
@@ -52,7 +57,7 @@ public class UsuarioJpaEntity {
     private List<SesionJpaEntity> sesiones;
 
     public UsuarioJpaEntity(String nombre, String apellido, String contrasena,
-                             String correo, List<RolJpaEntity> rol) {
+                            String correo, List<RolJpaEntity> rol) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;

@@ -3,8 +3,9 @@ package com.project.sentimentapi.presentation.controller;
 import com.project.sentimentapi.domain.port.in.AutenticarUsuarioUseCase;
 import com.project.sentimentapi.domain.port.in.RecuperarContrasenaUseCase;
 import com.project.sentimentapi.domain.port.in.RegistrarUsuarioUseCase;
-import com.project.sentimentapi.dto.LoginResponseDto;
-import com.project.sentimentapi.dto.UserDtoRegistro;
+import com.project.sentimentapi.presentation.dto.request.LoginRequestDto;
+import com.project.sentimentapi.presentation.dto.request.RegistroRequestDto;
+import com.project.sentimentapi.presentation.dto.response.LoginResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.Optional;
 
-// ISP: cada use case inyectado es una interfaz de responsabilidad única
 @RestController
 @RequestMapping("/api/usuarios")
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class UsuarioController {
     private final RecuperarContrasenaUseCase recuperarUseCase;
 
     @PostMapping("/registro")
-    public ResponseEntity<?> registrar(@RequestBody UserDtoRegistro dto) {
+    public ResponseEntity<?> registrar(@RequestBody RegistroRequestDto dto) {
         try {
             registrarUseCase.registrar(dto);
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -36,7 +36,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDtoRegistro dto) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto dto) {
         Optional<LoginResponseDto> resultado = autenticarUseCase.autenticar(dto);
         return resultado
                 .map(ResponseEntity::ok)

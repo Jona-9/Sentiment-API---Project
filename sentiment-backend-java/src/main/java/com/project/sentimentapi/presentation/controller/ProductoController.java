@@ -1,8 +1,8 @@
 package com.project.sentimentapi.presentation.controller;
 
 import com.project.sentimentapi.domain.port.in.GestionarProductoUseCase;
-import com.project.sentimentapi.dto.ProductoDto;
-import com.project.sentimentapi.dto.ProductoRequestDto;
+import com.project.sentimentapi.presentation.dto.response.ProductoDto;
+import com.project.sentimentapi.presentation.dto.request.ProductoRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import java.util.List;
 
 // ISP: ProductoController solo depende de GestionarProductoUseCase
 @RestController
-@RequestMapping("/api/productos")
+@RequestMapping("/productos")
 @RequiredArgsConstructor
 public class ProductoController {
 

@@ -1,8 +1,7 @@
 package com.project.sentimentapi.application.mapper;
 
 import com.project.sentimentapi.domain.model.Categoria;
-import com.project.sentimentapi.dto.CategoriaDto;
-
+import com.project.sentimentapi.presentation.dto.response.*;
 public class CategoriaMapper {
 
     private CategoriaMapper() {}

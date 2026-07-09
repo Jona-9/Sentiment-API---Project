@@ -2,7 +2,7 @@ package com.project.sentimentapi.infrastructure.external;
 
 import com.project.sentimentapi.domain.exception.SentimentApiException;
 import com.project.sentimentapi.domain.port.out.SentimentAnalysisPort;
-import com.project.sentimentapi.dto.SentimentsResponseDto;
+import com.project.sentimentapi.presentation.dto.response.SentimentsResponseDto;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;

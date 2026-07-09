@@ -1,9 +1,9 @@
 package com.project.sentimentapi.presentation.controller;
 
-import com.project.sentimentapi.entity.Categoria;
-import com.project.sentimentapi.entity.User;
-import com.project.sentimentapi.repository.CategoriaRepository;
-import com.project.sentimentapi.repository.UserRepository;
+import com.project.sentimentapi.infrastructure.persistence.entity.CategoriaJpaEntity;
+import com.project.sentimentapi.infrastructure.persistence.entity.UsuarioJpaEntity;
+import com.project.sentimentapi.infrastructure.persistence.repository.CategoriaJpaRepository;
+import com.project.sentimentapi.infrastructure.persistence.repository.UsuarioJpaRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +17,12 @@ import java.util.Map;
 // DebugController movido a presentation/; mantiene referencias legacy temporalmente.
 // Pendiente de migración: reemplazar UserRepository/CategoriaRepository por use cases de dominio.
 @RestController
-@RequestMapping("/api/debug")
+@RequestMapping("/debug")
 @RequiredArgsConstructor
 public class DebugController {
 
-    private final UserRepository userRepository;
-    private final CategoriaRepository categoriaRepository;
+    private final UsuarioJpaRepository userRepository;
+    private final CategoriaJpaRepository categoriaRepository;
 
     @GetMapping("/health")
     public ResponseEntity<Map<String, String>> health() {
@@ -36,10 +36,10 @@ public class DebugController {
             return ResponseEntity.status(401).body("No autorizado");
         }
 
-        User usuario = userRepository.findById(usuarioId)
+        UsuarioJpaEntity usuario = userRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        List<Categoria> categoriasExistentes =
+        List<CategoriaJpaEntity> categoriasExistentes =
                 categoriaRepository.findByUsuarioOrderByNombreCategoriaAsc(usuario);
 
         if (!categoriasExistentes.isEmpty()) {
@@ -49,19 +49,19 @@ public class DebugController {
             ));
         }
 
-        List<Categoria> categorias = new ArrayList<>();
-        categorias.add(new Categoria("Electrónica", "Productos electrónicos, smartphones, computadoras y accesorios tecnológicos", usuario));
-        categorias.add(new Categoria("Ropa y Moda", "Vestimenta, calzado, accesorios y productos de moda", usuario));
-        categorias.add(new Categoria("Alimentos y Bebidas", "Productos comestibles, bebidas, snacks y comida preparada", usuario));
-        categorias.add(new Categoria("Hogar y Decoración", "Muebles, decoración, artículos para el hogar y jardín", usuario));
-        categorias.add(new Categoria("Belleza y Cuidado Personal", "Cosméticos, productos de belleza, cuidado de la piel e higiene personal", usuario));
-        categorias.add(new Categoria("Entretenimiento", "Videojuegos, libros, películas, música y hobbies", usuario));
-        categorias.add(new Categoria("Deportes y Fitness", "Equipamiento deportivo, ropa deportiva y productos para ejercicio", usuario));
-        categorias.add(new Categoria("Servicios", "Servicios profesionales, delivery, suscripciones y servicios digitales", usuario));
-        categorias.add(new Categoria("Automotriz", "Vehículos, repuestos, accesorios y servicios para automóviles", usuario));
-        categorias.add(new Categoria("Educación", "Cursos, capacitaciones, material educativo y servicios académicos", usuario));
-        categorias.add(new Categoria("Salud y Bienestar", "Productos médicos, suplementos, vitaminas y servicios de salud", usuario));
-        categorias.add(new Categoria("Niños y Bebés", "Productos para bebés, juguetes, ropa infantil y artículos de maternidad", usuario));
+        List<CategoriaJpaEntity> categorias = new ArrayList<>();
+        categorias.add(new CategoriaJpaEntity("Electrónica", "Productos electrónicos, smartphones, computadoras y accesorios tecnológicos", usuario));
+        categorias.add(new CategoriaJpaEntity("Ropa y Moda", "Vestimenta, calzado, accesorios y productos de moda", usuario));
+        categorias.add(new CategoriaJpaEntity("Alimentos y Bebidas", "Productos comestibles, bebidas, snacks y comida preparada", usuario));
+        categorias.add(new CategoriaJpaEntity("Hogar y Decoración", "Muebles, decoración, artículos para el hogar y jardín", usuario));
+        categorias.add(new CategoriaJpaEntity("Belleza y Cuidado Personal", "Cosméticos, productos de belleza, cuidado de la piel e higiene personal", usuario));
+        categorias.add(new CategoriaJpaEntity("Entretenimiento", "Videojuegos, libros, películas, música y hobbies", usuario));
+        categorias.add(new CategoriaJpaEntity("Deportes y Fitness", "Equipamiento deportivo, ropa deportiva y productos para ejercicio", usuario));
+        categorias.add(new CategoriaJpaEntity("Servicios", "Servicios profesionales, delivery, suscripciones y servicios digitales", usuario));
+        categorias.add(new CategoriaJpaEntity("Automotriz", "Vehículos, repuestos, accesorios y servicios para automóviles", usuario));
+        categorias.add(new CategoriaJpaEntity("Educación", "Cursos, capacitaciones, material educativo y servicios académicos", usuario));
+        categorias.add(new CategoriaJpaEntity("Salud y Bienestar", "Productos médicos, suplementos, vitaminas y servicios de salud", usuario));
+        categorias.add(new CategoriaJpaEntity("Niños y Bebés", "Productos para bebés, juguetes, ropa infantil y artículos de maternidad", usuario));
 
         categoriaRepository.saveAll(categorias);
 
@@ -79,12 +79,12 @@ public class DebugController {
             return ResponseEntity.status(401).body("No autorizado");
         }
 
-        User usuario = userRepository.findById(usuarioId).orElse(null);
+        UsuarioJpaEntity usuario = userRepository.findById(usuarioId).orElse(null);
         if (usuario == null) {
             return ResponseEntity.ok("Usuario no encontrado");
         }
 
-        List<Categoria> categorias =
+        List<CategoriaJpaEntity> categorias =
                 categoriaRepository.findByUsuarioOrderByNombreCategoriaAsc(usuario);
 
         Map<String, Object> response = new HashMap<>();

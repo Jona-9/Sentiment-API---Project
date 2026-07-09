@@ -1,7 +1,7 @@
 package com.project.sentimentapi.domain.port.in;
 
-import com.project.sentimentapi.dto.UserDtoRegistro;
+import com.project.sentimentapi.presentation.dto.request.RegistroRequestDto;
 
 public interface RegistrarUsuarioUseCase {
-    void registrar(UserDtoRegistro request);
+    void registrar(RegistroRequestDto request);
 }

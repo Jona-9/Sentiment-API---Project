@@ -1,7 +1,7 @@
 package com.project.sentimentapi.domain.port.in;
 
-import com.project.sentimentapi.dto.CsvAnalysisResponseDto;
-import com.project.sentimentapi.dto.CsvEntradaDto;
+import com.project.sentimentapi.presentation.dto.response.CsvAnalysisResponseDto;
+import com.project.sentimentapi.presentation.dto.request.CsvEntradaDto;
 
 import java.util.List;
 

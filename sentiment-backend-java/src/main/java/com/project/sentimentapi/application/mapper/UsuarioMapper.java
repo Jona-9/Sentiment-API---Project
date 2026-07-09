@@ -1,8 +1,7 @@
 package com.project.sentimentapi.application.mapper;
 
 import com.project.sentimentapi.domain.model.Usuario;
-import com.project.sentimentapi.dto.UserDto;
-
+import com.project.sentimentapi.presentation.dto.response.*;
 public class UsuarioMapper {
 
     private UsuarioMapper() {}

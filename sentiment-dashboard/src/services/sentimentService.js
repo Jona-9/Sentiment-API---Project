@@ -177,7 +177,7 @@ export const sentimentService = {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ entradas })
+        body: JSON.stringify(entradas)
       });
 
       if (!response.ok) {
@@ -197,11 +197,13 @@ export const sentimentService = {
         return s || 'neutral';
       };
 
+      // El backend devuelve totalPositivos/totalNegativos/totalNeutrales/totalComentarios
+      // (campos de CsvAnalysisResponseDto), no positivos/negativos/neutrales/total directamente
       return {
         isBatch: true,
-        totalAnalyzed: data.total || entradas.length,
+        totalAnalyzed: data.totalComentarios || entradas.length,
         sessionSaved: true,
-        sessionId: data.sessionId,
+        sessionId: data.sesionId,
         items: (data.comentarios || []).map(r => ({
           text: r.texto,
           sentiment: normalizeSentiment(r.sentimiento),
@@ -210,11 +212,11 @@ export const sentimentService = {
         })),
         stats: {
           avgScore: data.avgScore || 0,
-          positivos: data.positivos || 0,
-          negativos: data.negativos || 0,
-          neutrales: data.neutrales || 0,
+          positivos: data.totalPositivos || 0,
+          negativos: data.totalNegativos || 0,
+          neutrales: data.totalNeutrales || 0,
         },
-        productosDetectados: data.productosDetectados || []
+        productosDetectados: data.productos || []
       };
 
     } catch (error) {
