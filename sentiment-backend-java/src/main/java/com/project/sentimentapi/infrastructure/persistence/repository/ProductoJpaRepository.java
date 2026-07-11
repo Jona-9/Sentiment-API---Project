@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+// REPOSITORIO SPRING DATA JPA (capa infrastructure). CRUD automático + consultas derivadas
+// por nombre y consultas @Query (JPQL) para rankings de productos. Lo usa ProductoRepositoryAdapter.
 @Repository
 public interface ProductoJpaRepository extends JpaRepository<ProductoJpaEntity, Integer> {
     List<ProductoJpaEntity> findByUsuarioOrderByUltimaActualizacionDesc(UsuarioJpaEntity usuario);

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+// ENTIDAD JPA (capa infrastructure). Mapea la tabla "categoria" y sus relaciones con
+// usuario (dueño) y productos. Contraparte persistente del modelo de dominio Categoria.
 @Entity
 @Data
 @NoArgsConstructor

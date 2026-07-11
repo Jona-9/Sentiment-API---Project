@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-// ISP: CategoriaController solo depende de GestionarCategoriaUseCase
+// CONTROLLER REST (capa presentation). Patrón Controller (GRASP).
+// ISP: CategoriaController solo depende de GestionarCategoriaUseCase.
 @RestController
 @RequestMapping("/categorias")
 @RequiredArgsConstructor

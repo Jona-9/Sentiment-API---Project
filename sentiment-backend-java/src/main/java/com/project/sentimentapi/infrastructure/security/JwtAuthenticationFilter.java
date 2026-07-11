@@ -11,6 +11,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+// FILTRO DE SEGURIDAD (capa infrastructure). Se ejecuta ANTES de cada request (extiende
+// OncePerRequestFilter = una vez por petición). Intercepta la cabecera Authorization,
+// valida el JWT y, si es válido, inyecta usuarioId/correo como atributos del request
+// para que los controllers sepan quién llama. Si no hay token válido en una ruta
+// protegida, corta la petición con 401.
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -44,16 +49,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Ruta protegida: exige cabecera "Authorization: Bearer <token>"
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
+            String token = authHeader.substring(7); // quitar el prefijo "Bearer "
             try {
+                // Extraer identidad del token (verifica la firma internamente)
                 String correo = jwtUtil.extractCorreo(token);
                 Integer usuarioId = jwtUtil.extractUsuarioId(token);
 
+                // El usuario debe existir en BD y el token ser válido (firma + no expirado)
                 if (usuarioJpaRepository.findByCorreo(correo).isPresent() &&
                         jwtUtil.validateToken(token, correo)) {
+                    // Guardar identidad en el request → los controllers la leen con getAttribute
                     request.setAttribute("usuarioId", usuarioId);
                     request.setAttribute("correo", correo);
                     System.out.println("Token válido - Usuario: " + correo);

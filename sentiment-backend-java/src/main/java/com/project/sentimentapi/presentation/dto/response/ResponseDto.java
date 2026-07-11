@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @NoArgsConstructor
+// DTO DE SALIDA (capa presentation). Resultado individual del modelo de ML para UN texto:
+// la previsión (Positivo/Negativo/Neutro) y la probabilidad/confianza asociada.
 public class ResponseDto {
     private String prevision;
     private Double probabilidad;

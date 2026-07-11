@@ -1,5 +1,11 @@
 package com.project.sentimentapi.domain.model;
 
+// MODELO DE DOMINIO (Clean Architecture — capa domain).
+// POJO puro: no tiene @Entity ni ninguna anotación de JPA/Spring. Representa el
+// concepto de negocio "Usuario" independientemente de cómo se persista.
+// Principio DIP: el dominio NO depende de la base de datos; la traducción a la
+// entidad JPA (UsuarioJpaEntity) ocurre en un adapter de infrastructure.
+// Nota de seguridad: solo guarda passwordHash (BCrypt), nunca la contraseña en claro.
 public class Usuario {
 
     private Integer id;

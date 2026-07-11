@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-// Centraliza el manejo de excepciones de dominio y las convierte en respuestas HTTP.
-// LSP: cada handler trabaja con el tipo más específico de la jerarquía.
+// MANEJADOR GLOBAL DE EXCEPCIONES (capa presentation).
+// @ControllerAdvice intercepta las excepciones lanzadas por CUALQUIER controller y las
+// traduce a una respuesta HTTP uniforme (JSON con timestamp/status/error/message). Así
+// los use cases lanzan excepciones de dominio limpias y aquí —y solo aquí— se decide el
+// código HTTP: 404 no encontrado, 503 servicio de IA caído, 401 token, 400 argumento, 500 resto.
+// LSP: cada handler trabaja con el tipo más específico de la jerarquía de excepciones.
 @ControllerAdvice
 public class GlobalExceptionHandler {
 

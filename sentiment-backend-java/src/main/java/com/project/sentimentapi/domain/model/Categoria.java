@@ -1,5 +1,8 @@
 package com.project.sentimentapi.domain.model;
 
+// MODELO DE DOMINIO (capa domain). POJO puro que agrupa productos bajo una
+// categoría perteneciente a un usuario (usuarioId). Sin anotaciones JPA: el
+// dominio ignora cómo se almacena.
 public class Categoria {
 
     private Integer id;

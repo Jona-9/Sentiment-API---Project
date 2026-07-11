@@ -12,6 +12,11 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.Arrays;
 import java.util.List;
 
+// CONFIGURACIÓN DE SEGURIDAD (capa infrastructure). Registra dos filtros como @Bean:
+//  1) CorsFilter — permite que el dashboard (otro origen/puerto) llame a la API sin ser
+//     bloqueado por la política CORS del navegador.
+//  2) JwtAuthenticationFilter — valida el token en cada request.
+// El orden importa: CORS va primero (HIGHEST_PRECEDENCE) y el filtro JWT después.
 @Configuration
 public class SecurityConfig {
 

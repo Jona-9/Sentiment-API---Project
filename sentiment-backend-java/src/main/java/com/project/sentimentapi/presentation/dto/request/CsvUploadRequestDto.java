@@ -9,6 +9,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+// DTO DE ENTRADA (capa presentation). Representa la carga de un CSV completo (conjunto
+// de filas) tal como llega desde el cliente.
 public class CsvUploadRequestDto {
     private List<CsvRowDto> rows;
 

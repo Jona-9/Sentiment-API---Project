@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+// CONFIGURACIÓN / SEED DE DATOS (capa infrastructure).
+// Implementa CommandLineRunner: Spring ejecuta run(...) una vez al arrancar la app.
+// Objetivo: garantizar que existan los roles base (ADMIN, USER) y usuarios de prueba
+// con contraseña ya hasheada en BCrypt, para que el login funcione desde el primer arranque.
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -29,6 +33,7 @@ public class DataInitializer implements CommandLineRunner {
         RolJpaEntity adminRol;
         RolJpaEntity userRol;
 
+        // Si la tabla de roles está vacía, crear ADMIN y USER; si no, recuperarlos
         if (rolJpaRepository.count() == 0) {
             System.out.println("Creando roles...");
 

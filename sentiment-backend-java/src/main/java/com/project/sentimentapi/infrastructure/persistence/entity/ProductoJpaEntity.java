@@ -8,6 +8,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+// ENTIDAD JPA (capa infrastructure). Mapea la tabla "producto" con sus contadores de
+// sentimiento y sus relaciones (categoría, usuario, sesiones). Los callbacks @PrePersist
+// y @PreUpdate rellenan las fechas automáticamente. Es la contraparte persistente del
+// modelo de dominio Producto; ProductoRepositoryAdapter traduce entre ambos.
 @Entity
 @Data
 @NoArgsConstructor

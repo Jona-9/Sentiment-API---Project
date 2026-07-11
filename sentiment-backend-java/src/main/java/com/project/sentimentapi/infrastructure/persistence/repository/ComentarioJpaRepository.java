@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+// REPOSITORIO SPRING DATA JPA (capa infrastructure). CRUD automático de comentarios.
+// findBySesionSesionId navega la relación sesion → sesionId para traer el detalle de una sesión.
 @Repository
 public interface ComentarioJpaRepository extends JpaRepository<ComentarioJpaEntity, Integer> {
     List<ComentarioJpaEntity> findBySesionSesionId(Integer sesionId);

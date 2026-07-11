@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// ENTIDAD JPA (capa infrastructure). Mapea la tabla "comentario": cada reseña analizada
+// con su sentimiento y probabilidad, vinculada a la sesión (@ManyToOne). Contraparte
+// persistente del modelo de dominio Comentario.
 @Entity
 @Data
 @NoArgsConstructor

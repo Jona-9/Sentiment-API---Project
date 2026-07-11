@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// ISP: ProductoController solo depende de GestionarProductoUseCase
+// CONTROLLER REST (capa presentation). Patrón Controller (GRASP).
+// ISP: ProductoController solo depende de GestionarProductoUseCase.
 @RestController
 @RequestMapping("/productos")
 @RequiredArgsConstructor

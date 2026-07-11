@@ -3,9 +3,12 @@ package com.project.sentimentapi.application.mapper;
 import com.project.sentimentapi.domain.model.Producto;
 import com.project.sentimentapi.presentation.dto.response.*;
 
+// MAPPER (capa application). Traduce el modelo de dominio Producto al DTO ProductoDto,
+// calculando además los porcentajes de sentimiento (positivos/negativos/neutrales)
+// que la UI muestra. Utilidad estática sin estado (constructor privado).
 public class ProductoMapper {
 
-    private ProductoMapper() {}
+    private ProductoMapper() {} // constructor privado: clase de utilidad, no instanciable
 
     public static ProductoDto toDto(Producto producto) {
         if (producto == null) return null;

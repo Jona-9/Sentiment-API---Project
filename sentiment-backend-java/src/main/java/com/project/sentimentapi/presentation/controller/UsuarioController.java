@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.Optional;
 
+// CONTROLLER REST (capa presentation). Patrón Controller (GRASP): es la puerta de
+// entrada de las peticiones HTTP de usuario y las delega a los casos de uso, sin
+// contener lógica de negocio. Principio DIP: inyecta interfaces (ports in), no clases
+// concretas. @RequiredArgsConstructor (Lombok) genera el constructor con los final.
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/api/usuarios")   // prefijo común de todos los endpoints de usuario
 @RequiredArgsConstructor
 public class UsuarioController {
 
@@ -37,6 +41,7 @@ public class UsuarioController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto dto) {
+        // Delega al use case; si hay token → 200 con el DTO, si no → 401 (credenciales inválidas)
         Optional<LoginResponseDto> resultado = autenticarUseCase.autenticar(dto);
         return resultado
                 .map(ResponseEntity::ok)

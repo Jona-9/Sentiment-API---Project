@@ -9,6 +9,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+// DTO DE SALIDA (capa presentation). Resumen de la sesión anterior de un producto, para
+// mostrar la comparativa "sesión previa vs. actual".
 public class SesionPreviaInfoDto {
     private Integer sesionId;
     private String fecha;

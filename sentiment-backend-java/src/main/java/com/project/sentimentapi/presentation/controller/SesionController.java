@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// ISP: solo inyecta ConsultarSesionesUseCase.
+// CONTROLLER REST (capa presentation). Patrón Controller (GRASP).
+// ISP: solo inyecta ConsultarSesionesUseCase (lectura del historial).
 // El guardado de sesiones ocurre internamente vía AnalizarCsvUseCase,
 // por lo que SesionController no necesita GuardarSesionUseCase.
 @RestController

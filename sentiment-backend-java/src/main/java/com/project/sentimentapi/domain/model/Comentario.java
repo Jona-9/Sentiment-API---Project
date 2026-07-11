@@ -1,5 +1,9 @@
 package com.project.sentimentapi.domain.model;
 
+// MODELO DE DOMINIO (capa domain). POJO puro que representa un comentario/reseña
+// ya analizado: su texto, el sentimiento devuelto por la API de ML, la
+// probabilidad (confianza del modelo) y a qué sesión de análisis pertenece.
+// Se persiste vinculado a la sesión para poder reconstruir el detalle en el historial.
 public class Comentario {
 
     private Integer id;
