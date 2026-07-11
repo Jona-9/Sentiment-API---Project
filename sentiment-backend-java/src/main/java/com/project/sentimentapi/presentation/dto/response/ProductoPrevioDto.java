@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+// DTO DE SALIDA (capa presentation). Estado "previo" de un producto, usado para comparar
+// su evolución entre sesiones (antes/después) en el dashboard.
 public class ProductoPrevioDto {
     private Integer productoId;
     private String nombreProducto;

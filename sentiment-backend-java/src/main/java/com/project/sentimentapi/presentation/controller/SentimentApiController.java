@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+// CONTROLLER REST (capa presentation). Patrón Controller (GRASP). Endpoint de análisis
+// de texto suelto (diagnóstico/pruebas). @Validated + @NotBlank/@Size validan la entrada
+// antes de llegar al use case. Delega en AnalizarTextoUseCase (DIP).
 @RestController
 @RequestMapping("/sentiment/analyze")
 @Validated

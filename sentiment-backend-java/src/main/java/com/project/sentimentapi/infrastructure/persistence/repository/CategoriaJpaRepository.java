@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+// REPOSITORIO SPRING DATA JPA (capa infrastructure). CRUD automático + consultas
+// derivadas por nombre para categorías de un usuario. Lo consume CategoriaRepositoryAdapter.
 @Repository
 public interface CategoriaJpaRepository extends JpaRepository<CategoriaJpaEntity, Integer> {
     List<CategoriaJpaEntity> findByUsuarioOrderByNombreCategoriaAsc(UsuarioJpaEntity usuario);

@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// ENTIDAD JPA (capa infrastructure). Tabla puente sesión↔producto: guarda el desglose
+// de sentimiento de un producto DENTRO de una sesión concreta. Contraparte persistente
+// del modelo de dominio SesionProducto.
 @Entity
 @Data
 @NoArgsConstructor

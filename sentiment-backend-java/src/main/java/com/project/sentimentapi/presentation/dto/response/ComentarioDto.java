@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+// DTO DE SALIDA (capa presentation). Comentario ya analizado para mostrar en la UI:
+// texto, sentimiento, probabilidad y el producto asociado.
 public class ComentarioDto {
     private String texto;
     private String sentimiento;

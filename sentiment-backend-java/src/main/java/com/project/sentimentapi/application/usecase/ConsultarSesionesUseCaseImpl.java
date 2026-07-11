@@ -15,6 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// CASO DE USO de consulta del historial (capa application).
+// Principio ISP: implementa solo la interfaz de LECTURA (ConsultarSesionesUseCase);
+// la escritura vive en GuardarSesionUseCaseImpl.
+// Principio SRP: orquesta lectura de sesiones y su detalle de comentarios, y delega
+// el mapeo modelo→DTO en SesionMapper.
+// @Transactional(readOnly = true): optimiza la transacción para solo lectura.
 @Service
 public class ConsultarSesionesUseCaseImpl implements ConsultarSesionesUseCase {
 

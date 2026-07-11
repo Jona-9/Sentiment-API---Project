@@ -9,6 +9,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+// DTO DE SALIDA (capa presentation). Resultado COMPLETO del análisis de un CSV: totales
+// globales, desglose por categoría y por producto (clases anidadas) y el detalle de
+// comentarios. Es lo que devuelve AnalizarCsvUseCase y consume el dashboard.
 public class CsvAnalysisResponseDto {
     private Integer sesionId;
     private String fecha;

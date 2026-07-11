@@ -9,6 +9,11 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// ENTIDAD JPA (capa infrastructure — detalle de persistencia).
+// A DIFERENCIA del modelo de dominio Usuario, esta clase SÍ lleva anotaciones de JPA
+// (@Entity, @Table, @Column, relaciones) y representa la tabla "usuarios". El
+// UsuarioRepositoryAdapter traduce entre esta entidad y el POJO de dominio (patrón Adapter).
+// Mantener ambas separadas es lo que respeta el DIP: el dominio no depende de jakarta.persistence.
 @Entity
 @Data
 @Table(name = "usuarios")

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+// REPOSITORIO SPRING DATA JPA (capa infrastructure). CRUD de sesiones + consulta del
+// historial ordenado. Lo consume SesionRepositoryAdapter.
 @Repository
 public interface SesionJpaRepository extends JpaRepository<SesionJpaEntity, Integer> {
     // Orden canónico del historial: más reciente primero (contrato del endpoint GET /sesiones).

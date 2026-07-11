@@ -7,6 +7,8 @@ import lombok.ToString;
 
 import java.util.List;
 
+// ENTIDAD JPA (capa infrastructure). Mapea la tabla "rol" y su relación @ManyToMany con
+// usuarios. Contraparte persistente del modelo de dominio Rol.
 @Entity
 @Data
 @ToString(exclude = {"user"})

@@ -6,6 +6,8 @@ import com.project.sentimentapi.presentation.dto.response.ProductoDto;
 import java.util.List;
 
 
+// PORT IN (puerto de entrada — capa domain). Contrato de gestión de productos:
+// crear, consultar (por usuario/categoría/id) y actualizar contadores de sentimiento.
 public interface GestionarProductoUseCase {
     ProductoDto crearProducto(ProductoRequestDto request, Integer usuarioId);
     List<ProductoDto> obtenerProductosPorUsuario(Integer usuarioId);

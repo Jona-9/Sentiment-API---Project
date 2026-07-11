@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+// ENTIDAD JPA (capa infrastructure). Mapea la tabla "sesion" con las estadísticas
+// globales del análisis y sus relaciones (usuario dueño y comentarios). Contraparte
+// persistente del modelo de dominio Sesion; SesionRepositoryAdapter traduce entre ambos.
 @Entity
 @Data
 @NoArgsConstructor

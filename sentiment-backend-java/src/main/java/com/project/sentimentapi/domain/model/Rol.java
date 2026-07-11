@@ -1,5 +1,7 @@
 package com.project.sentimentapi.domain.model;
 
+// MODELO DE DOMINIO (capa domain). POJO puro que representa un rol de autorización
+// (ej. "USER", "ADMIN"). Se asigna al usuario al registrarse y viaja dentro del JWT.
 public class Rol {
 
     private Integer id;

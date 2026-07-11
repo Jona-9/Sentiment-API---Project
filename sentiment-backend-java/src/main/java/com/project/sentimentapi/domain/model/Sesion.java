@@ -2,6 +2,10 @@ package com.project.sentimentapi.domain.model;
 
 import java.time.LocalDateTime;
 
+// MODELO DE DOMINIO (capa domain). POJO puro que representa una "sesión de
+// análisis": el resultado global de procesar un CSV (totales y desglose de
+// sentimiento) para un usuario en un momento dado. Se construye con SesionBuilder
+// (patrón Builder) y es la unidad que aparece en el historial del dashboard.
 public class Sesion {
 
     private Integer id;

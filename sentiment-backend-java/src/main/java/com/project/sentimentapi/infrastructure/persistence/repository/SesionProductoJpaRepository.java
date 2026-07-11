@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+// REPOSITORIO SPRING DATA JPA (capa infrastructure). CRUD de la relación sesión↔producto
+// + consulta @Query (JPQL con subconsulta) que trae el desglose de la ÚLTIMA sesión del usuario.
 @Repository
 public interface SesionProductoJpaRepository extends JpaRepository<SesionProductoJpaEntity, Integer> {
     List<SesionProductoJpaEntity> findBySesion(SesionJpaEntity sesion);

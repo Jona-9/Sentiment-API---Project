@@ -59,6 +59,9 @@ public class EmailAdapter implements EmailPort {
         }
     }
 
+    // Método privado que concentra la llamada HTTP real a Resend (SRP dentro del adapter).
+    // Es el único punto que conoce el formato de la API externa; si se cambia de proveedor
+    // solo cambia este método (o se crea otro adapter que implemente EmailPort).
     private void enviarViaResend(String destinatario, String asunto, String htmlContent) {
         Map<String, Object> body = Map.of(
                 "from", "onboarding@resend.dev",

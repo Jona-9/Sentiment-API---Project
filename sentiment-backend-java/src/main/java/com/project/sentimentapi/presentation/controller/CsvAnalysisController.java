@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// CONTROLLER REST (capa presentation). Patrón Controller (GRASP): recibe el CSV del
+// dashboard y delega toda la orquestación a un único método del use case (fachada). El
+// controller no sabe cómo se llama la API de ML, cómo se calculan estadísticas ni cómo
+// se guarda la sesión — solo coordina HTTP. DIP: depende del port AnalizarCsvUseCase.
 @RestController
 @RequestMapping("/csv")
 @RequiredArgsConstructor

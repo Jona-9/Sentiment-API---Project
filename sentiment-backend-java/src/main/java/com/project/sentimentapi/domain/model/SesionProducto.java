@@ -1,5 +1,9 @@
 package com.project.sentimentapi.domain.model;
 
+// MODELO DE DOMINIO (capa domain). POJO puro que representa el desglose de
+// sentimiento de UN producto DENTRO de UNA sesión concreta (tabla puente
+// sesión↔producto). Permite responder "¿cómo le fue a este producto en este
+// análisis?" sin mezclarlo con el acumulado histórico que guarda Producto.
 public class SesionProducto {
 
     private Integer id;

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+// DTO DE SALIDA (capa presentation). Producto con sus contadores y porcentajes de
+// sentimiento ya calculados, listo para que el dashboard lo grafique.
 public class ProductoDto {
     private Integer productoId;
     private String nombreProducto;

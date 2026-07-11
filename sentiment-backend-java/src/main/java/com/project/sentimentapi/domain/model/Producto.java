@@ -1,5 +1,11 @@
 package com.project.sentimentapi.domain.model;
 
+// MODELO DE DOMINIO (capa domain). POJO puro sin anotaciones de persistencia.
+// Representa un producto sobre el que se acumulan menciones y su desglose de
+// sentimiento (positivos/negativos/neutrales). El use case de análisis actualiza
+// estos contadores; la persistencia real la resuelve ProductoRepositoryAdapter.
+// Guarda categoriaId (no el objeto Categoria) para mantener el dominio simple y
+// desacoplado — bajo acoplamiento (GRASP).
 public class Producto {
 
     private Integer id;

@@ -8,6 +8,8 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+// DTO DE SALIDA (capa presentation). Sesión de análisis para el historial del dashboard:
+// estadísticas globales y, opcionalmente, el detalle de comentarios. Lo produce SesionMapper.
 public class SesionDto {
     @JsonProperty("sessionId")
     private Integer sesionId;
