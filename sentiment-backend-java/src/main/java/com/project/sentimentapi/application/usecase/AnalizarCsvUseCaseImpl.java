@@ -3,20 +3,19 @@ package com.project.sentimentapi.application.usecase;
 import com.project.sentimentapi.application.builder.SesionBuilder;
 import com.project.sentimentapi.domain.exception.SentimentApiException;
 import com.project.sentimentapi.domain.model.Sesion;
-import com.project.sentimentapi.domain.port.in.AnalizarCsvUseCase;
+import com.project.sentimentapi.application.port.in.AnalizarCsvUseCase;
 import com.project.sentimentapi.domain.model.Comentario;
 import com.project.sentimentapi.domain.port.out.CategoriaRepositoryPort;
 import com.project.sentimentapi.domain.port.out.ComentarioRepositoryPort;
 import com.project.sentimentapi.domain.port.out.ProductoRepositoryPort;
 import com.project.sentimentapi.domain.port.out.SentimentAnalysisPort;
 import com.project.sentimentapi.domain.port.out.SesionRepositoryPort;
-import com.project.sentimentapi.presentation.dto.response.CsvAnalysisResponseDto;
-import com.project.sentimentapi.presentation.dto.response.CsvAnalysisResponseDto.CategoriaAnalisisDto;
-import com.project.sentimentapi.presentation.dto.response.CsvAnalysisResponseDto.ProductoAnalisisDto;
-import com.project.sentimentapi.presentation.dto.request.CsvEntradaDto;
-import com.project.sentimentapi.presentation.dto.response.ComentarioDto;
-import com.project.sentimentapi.presentation.dto.response.ResponseDto;
-import com.project.sentimentapi.presentation.dto.response.SentimentsResponseDto;
+import com.project.sentimentapi.application.dto.response.CsvAnalysisResponseDto;
+import com.project.sentimentapi.application.dto.response.CsvAnalysisResponseDto.CategoriaAnalisisDto;
+import com.project.sentimentapi.application.dto.response.CsvAnalysisResponseDto.ProductoAnalisisDto;
+import com.project.sentimentapi.application.dto.request.CsvEntradaDto;
+import com.project.sentimentapi.application.dto.response.ComentarioDto;
+import com.project.sentimentapi.domain.model.ResultadoSentimiento;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,11 +62,9 @@ public class AnalizarCsvUseCaseImpl implements AnalizarCsvUseCase {
                 .collect(Collectors.toList());
 
         // PASO 2: Llamar a la API de sentimientos (Facade delega al port — OCP aplicado)
-        SentimentsResponseDto sentiments = sentimentPort.analizarLote(textos)
+        List<ResultadoSentimiento> resultados = sentimentPort.analizarLote(textos)
                 .orElseThrow(() -> new SentimentApiException(
                         "El servicio de análisis de sentimientos no respondió"));
-
-        List<ResponseDto> resultados = sentiments.getResults();
 
         // PASO 3: Calcular estadísticas generales
         int total = resultados.size();
@@ -81,7 +78,7 @@ public class AnalizarCsvUseCaseImpl implements AnalizarCsvUseCase {
 
         for (int i = 0; i < filas.size(); i++) {
             CsvEntradaDto fila = filas.get(i);
-            ResponseDto resultado = resultados.get(i);
+            ResultadoSentimiento resultado = resultados.get(i);
             String sentimiento = resultado.getPrevision();
             double prob = resultado.getProbabilidad() != null ? resultado.getProbabilidad() : 0.0;
 
@@ -118,7 +115,7 @@ public class AnalizarCsvUseCaseImpl implements AnalizarCsvUseCase {
         List<Comentario> comentariosDominio = new ArrayList<>();
         for (int i = 0; i < filas.size(); i++) {
             CsvEntradaDto fila = filas.get(i);
-            ResponseDto resultado = resultados.get(i);
+            ResultadoSentimiento resultado = resultados.get(i);
             comentariosDominio.add(new Comentario(
                     null,
                     fila.getTexto(),

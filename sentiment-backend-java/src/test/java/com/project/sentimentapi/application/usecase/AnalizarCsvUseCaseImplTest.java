@@ -3,12 +3,11 @@ package com.project.sentimentapi.application.usecase;
 import com.project.sentimentapi.domain.model.Categoria;
 import com.project.sentimentapi.domain.model.Comentario;
 import com.project.sentimentapi.domain.model.Producto;
+import com.project.sentimentapi.domain.model.ResultadoSentimiento;
 import com.project.sentimentapi.domain.model.Sesion;
 import com.project.sentimentapi.domain.port.out.*;
-import com.project.sentimentapi.presentation.dto.request.CsvEntradaDto;
-import com.project.sentimentapi.presentation.dto.response.CsvAnalysisResponseDto;
-import com.project.sentimentapi.presentation.dto.response.ResponseDto;
-import com.project.sentimentapi.presentation.dto.response.SentimentsResponseDto;
+import com.project.sentimentapi.application.dto.request.CsvEntradaDto;
+import com.project.sentimentapi.application.dto.response.CsvAnalysisResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -30,12 +29,11 @@ class AnalizarCsvUseCaseImplTest {
     @DisplayName("analizar() calcula correctamente los totales y delega en los ports")
     void calculaEstadisticasYOrquestaLosPorts() {
         // Arrange — el fake de sentimientos devuelve 1 positivo, 1 negativo, 1 neutro
-        SentimentsResponseDto respuestaFake = new SentimentsResponseDto();
-        respuestaFake.setResults(List.of(
-                new ResponseDto("Positivo", 0.9),
-                new ResponseDto("Negativo", 0.8),
-                new ResponseDto("Neutro", 0.5)
-        ));
+        List<ResultadoSentimiento> respuestaFake = List.of(
+                new ResultadoSentimiento("Positivo", 0.9),
+                new ResultadoSentimiento("Negativo", 0.8),
+                new ResultadoSentimiento("Neutro", 0.5)
+        );
         FakeSentimentPort sentimentPort = new FakeSentimentPort(respuestaFake);
         FakeSesionPort sesionPort = new FakeSesionPort();
         FakeComentarioPort comentarioPort = new FakeComentarioPort();
@@ -75,7 +73,7 @@ class AnalizarCsvUseCaseImplTest {
     @DisplayName("analizar() con lista vacía lanza IllegalArgumentException")
     void fallaConCsvVacio() {
         AnalizarCsvUseCaseImpl useCase = new AnalizarCsvUseCaseImpl(
-                new FakeSentimentPort(new SentimentsResponseDto()),
+                new FakeSentimentPort(List.of()),
                 new FakeProductoPort(), new FakeCategoriaPort(),
                 new FakeSesionPort(), new FakeComentarioPort());
 
@@ -88,10 +86,10 @@ class AnalizarCsvUseCaseImplTest {
     // use case programa contra ABSTRACCIONES (DIP), no contra JPA/WebClient.
 
     static class FakeSentimentPort implements SentimentAnalysisPort {
-        private final SentimentsResponseDto respuesta;
+        private final List<ResultadoSentimiento> respuesta;
         boolean fueLlamado = false;
-        FakeSentimentPort(SentimentsResponseDto respuesta) { this.respuesta = respuesta; }
-        @Override public Optional<SentimentsResponseDto> analizarLote(List<String> textos) {
+        FakeSentimentPort(List<ResultadoSentimiento> respuesta) { this.respuesta = respuesta; }
+        @Override public Optional<List<ResultadoSentimiento>> analizarLote(List<String> textos) {
             fueLlamado = true;
             return Optional.of(respuesta);
         }

@@ -1,7 +1,7 @@
 package com.project.sentimentapi.presentation.controller;
 
-import com.project.sentimentapi.domain.port.in.ConsultarSesionesUseCase;
-import com.project.sentimentapi.presentation.dto.response.SesionDto;
+import com.project.sentimentapi.application.port.in.ConsultarSesionesUseCase;
+import com.project.sentimentapi.application.dto.response.SesionDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

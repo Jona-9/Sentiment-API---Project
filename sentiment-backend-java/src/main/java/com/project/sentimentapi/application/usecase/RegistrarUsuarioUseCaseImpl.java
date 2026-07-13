@@ -2,9 +2,9 @@ package com.project.sentimentapi.application.usecase;
 
 import com.project.sentimentapi.domain.event.UserRegisteredEvent;
 import com.project.sentimentapi.domain.model.Usuario;
-import com.project.sentimentapi.domain.port.in.RegistrarUsuarioUseCase;
+import com.project.sentimentapi.application.port.in.RegistrarUsuarioUseCase;
 import com.project.sentimentapi.domain.port.out.UsuarioRepositoryPort;
-import com.project.sentimentapi.presentation.dto.request.RegistroRequestDto;
+import com.project.sentimentapi.application.dto.request.RegistroRequestDto;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;

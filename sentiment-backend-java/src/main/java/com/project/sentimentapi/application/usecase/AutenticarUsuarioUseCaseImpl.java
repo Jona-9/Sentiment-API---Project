@@ -1,11 +1,11 @@
 package com.project.sentimentapi.application.usecase;
 
 import com.project.sentimentapi.domain.model.Usuario;
-import com.project.sentimentapi.domain.port.in.AutenticarUsuarioUseCase;
+import com.project.sentimentapi.application.port.in.AutenticarUsuarioUseCase;
 import com.project.sentimentapi.domain.port.out.UsuarioRepositoryPort;
-import com.project.sentimentapi.presentation.dto.request.LoginRequestDto;
-import com.project.sentimentapi.presentation.dto.response.LoginResponseDto;
-import com.project.sentimentapi.infrastructure.security.JwtUtil;
+import com.project.sentimentapi.domain.port.out.TokenProviderPort;
+import com.project.sentimentapi.application.dto.request.LoginRequestDto;
+import com.project.sentimentapi.application.dto.response.LoginResponseDto;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +20,12 @@ import java.util.Optional;
 public class AutenticarUsuarioUseCaseImpl implements AutenticarUsuarioUseCase {
 
     private final UsuarioRepositoryPort usuarioPort;
-    private final JwtUtil jwtUtil;
+    private final TokenProviderPort tokenProvider;
 
     public AutenticarUsuarioUseCaseImpl(UsuarioRepositoryPort usuarioPort,
-                                        JwtUtil jwtUtil) {
+                                        TokenProviderPort tokenProvider) {
         this.usuarioPort = usuarioPort;
-        this.jwtUtil = jwtUtil;
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class AutenticarUsuarioUseCaseImpl implements AutenticarUsuarioUseCase {
             // 2) Verificar la contraseña contra el hash BCrypt almacenado
             if (BCrypt.checkpw(request.getContrasena(), usuario.getPasswordHash())) {
                 // 3) Credenciales correctas → generar token JWT con email e id
-                String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getId());
+                String token = tokenProvider.generarToken(usuario.getEmail(), usuario.getId());
                 return Optional.of(new LoginResponseDto(
                         usuario.getId(),
                         usuario.getNombre(),

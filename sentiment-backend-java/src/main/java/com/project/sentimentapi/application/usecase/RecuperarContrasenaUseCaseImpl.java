@@ -1,6 +1,6 @@
 package com.project.sentimentapi.application.usecase;
 
-import com.project.sentimentapi.domain.port.in.RecuperarContrasenaUseCase;
+import com.project.sentimentapi.application.port.in.RecuperarContrasenaUseCase;
 import com.project.sentimentapi.domain.port.out.EmailPort;
 import com.project.sentimentapi.domain.port.out.UsuarioRepositoryPort;
 import org.springframework.beans.factory.annotation.Value;

@@ -41,8 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         requestPath.contains("/api/usuarios/registro") ||
                         requestPath.contains("/api/usuarios/forgot-password") ||
                         requestPath.contains("/api/usuarios/reset-password") ||
-                        requestPath.contains("/sentiment/analyze") ||
-                        requestPath.contains("/debug/health");
+                        requestPath.contains("/sentiment/analyze");
 
         if (isPublicRoute) {
             filterChain.doFilter(request, response);

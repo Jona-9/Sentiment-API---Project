@@ -1,7 +1,7 @@
 package com.project.sentimentapi.application.mapper;
 
 import com.project.sentimentapi.domain.model.Producto;
-import com.project.sentimentapi.presentation.dto.response.*;
+import com.project.sentimentapi.application.dto.response.*;
 
 // MAPPER (capa application). Traduce el modelo de dominio Producto al DTO ProductoDto,
 // calculando además los porcentajes de sentimiento (positivos/negativos/neutrales)

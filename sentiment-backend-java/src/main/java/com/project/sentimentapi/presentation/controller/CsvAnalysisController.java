@@ -1,8 +1,8 @@
 package com.project.sentimentapi.presentation.controller;
 
-import com.project.sentimentapi.domain.port.in.AnalizarCsvUseCase;
-import com.project.sentimentapi.presentation.dto.response.CsvAnalysisResponseDto;
-import com.project.sentimentapi.presentation.dto.request.CsvEntradaDto;
+import com.project.sentimentapi.application.port.in.AnalizarCsvUseCase;
+import com.project.sentimentapi.application.dto.response.CsvAnalysisResponseDto;
+import com.project.sentimentapi.application.dto.request.CsvEntradaDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

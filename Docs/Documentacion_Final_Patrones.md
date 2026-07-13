@@ -142,19 +142,21 @@ Adoptamos **Clean Architecture** (Robert C. Martin). La regla fundamental: **las
 
 | Capa | Contenido | Regla |
 |---|---|---|
-| `domain` | POJOs de negocio, interfaces de ports (in/out), excepciones, evento | No importa Spring ni JPA |
-| `application` | Use cases, `SesionBuilder`, mappers, listener | Solo importa `domain` |
+| `domain` | POJOs de negocio, ports de salida (`port/out`), excepciones, evento | No importa Spring ni JPA |
+| `application` | Use cases, ports de entrada (`port/in`), DTOs request/response, `SesionBuilder`, mappers, listener | Solo importa `domain` |
 | `infrastructure` | Adapters JPA, `SentimentApiAdapter`, `EmailAdapter`, `WebClientConfig`, seguridad | Implementa los contratos de `domain` |
-| `presentation` | Controllers, DTOs request/response, `GlobalExceptionHandler` | Llama a los use cases de `application` |
+| `presentation` | Controllers, `GlobalExceptionHandler` | Llama a los use cases de `application` |
+
+> **Ubicación de los ports.** Siguiendo el modelo original de Clean Architecture (Robert C. Martin), los **puertos de entrada** (interfaces de casos de uso) viven en la capa de casos de uso → `application/port/in`. Los **puertos de salida** de tipo repositorio/gateway se mantienen en `domain/port/out` (estilo *Repository* de DDD). Lo esencial de la regla de dependencias es que **ningún port referencia tipos de capas externas** (no arrastran DTOs ni clases de Spring/JPA), de modo que las flechas siempre apuntan hacia adentro.
 
 Estructura de paquetes real:
 
 ```
 com.project.sentimentapi/
-├── domain/{model, port/in, port/out, event, exception}
-├── application/{usecase, builder, mapper, event}
+├── domain/{model, port/out, event, exception}
+├── application/{usecase, port/in, dto/{request,response}, builder, mapper, event}
 ├── infrastructure/{persistence/{entity,repository,adapter}, external, email, security, config}
-└── presentation/{controller, dto/request, dto/response, exception}
+└── presentation/{controller, exception}
 ```
 
 **Beneficio inmediato:** cambiar el proveedor de IA = crear un nuevo adapter que implemente `SentimentAnalysisPort`, sin tocar ningún use case. Cambiar de base de datos = nuevos adapters de repositorio, sin tocar el dominio.
@@ -167,7 +169,7 @@ com.project.sentimentapi/
 | **OCP** (Abierto/Cerrado) | Cambiar de IA obligaba a editar el servicio | Nuevo proveedor = nuevo adapter, sin tocar el use case | `infrastructure/external/SentimentApiAdapter.java` |
 | **LSP** (Sustitución de Liskov) | — | Cualquier implementación de un port es intercambiable; el handler trabaja con el tipo más específico | `presentation/exception/GlobalExceptionHandler.java` |
 | **DIP** (Inversión de Dependencia) | `@Autowired ConectarApi` (concreta) | El use case depende de `SentimentAnalysisPort` (interfaz) | `domain/port/out/SentimentAnalysisPort.java` |
-| **ISP** (Segregación de Interfaces) | `SesionService` mezclaba lectura y escritura | `GuardarSesionUseCase` (escritura) y `ConsultarSesionesUseCase` (lectura) separadas | `domain/port/in/*` |
+| **ISP** (Segregación de Interfaces) | `SesionService` mezclaba lectura y escritura | `GuardarSesionUseCase` (escritura) y `ConsultarSesionesUseCase` (lectura) separadas | `application/port/in/*` |
 
 **DIP — Antes vs. Después:**
 
@@ -181,6 +183,8 @@ public AnalizarCsvUseCaseImpl(SentimentAnalysisPort sentimentPort, ...) {
     this.sentimentPort = sentimentPort;
 }
 ```
+
+El mismo principio se aplicó al **JWT**: `AutenticarUsuarioUseCaseImpl` ya no depende de la clase concreta `JwtUtil` de `infrastructure`, sino del puerto `TokenProviderPort` (`domain/port/out`) que `JwtUtil` implementa. Así el caso de uso de login queda libre de la librería de tokens (`jjwt`).
 
 ### 3.3 Patrones GOF aplicados — Antes vs. Después (Unidades 2–4)
 
@@ -238,12 +242,13 @@ Sesion sesion = new SesionBuilder()
 public class SentimentApiAdapter implements SentimentAnalysisPort {
     private final WebClient webClient; // el @Bean Singleton
     @Override
-    public Optional<SentimentsResponseDto> analizarLote(List<String> textos) {
-        // ... llamada HTTP; el dominio nunca ve estas líneas ...
+    public Optional<List<ResultadoSentimiento>> analizarLote(List<String> textos) {
+        // ... llamada HTTP; el JSON externo se deserializa y se traduce a
+        // modelos de dominio (ResultadoSentimiento). El dominio nunca ve el DTO de transporte ...
     }
 }
 ```
-El mismo patrón desacopla JPA: `ProductoRepositoryAdapter implements ProductoRepositoryPort` traduce entre `ProductoJpaEntity` y el modelo `Producto`. **Beneficio:** el dominio no importa ninguna clase de Spring ni de JPA (habilita OCP y DIP).
+El mismo patrón desacopla JPA: `ProductoRepositoryAdapter implements ProductoRepositoryPort` traduce entre `ProductoJpaEntity` y el modelo `Producto`. **Beneficio:** el dominio no importa ninguna clase de Spring ni de JPA (habilita OCP y DIP). El port `SentimentAnalysisPort` devuelve el modelo de dominio `ResultadoSentimiento` —no el DTO externo `SentimentsResponseDto`—, de modo que ni siquiera la forma del JSON de la API de IA se filtra al núcleo.
 
 #### d) Facade *(Unidad 3 — estructural)*
 

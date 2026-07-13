@@ -1,8 +1,8 @@
 package com.project.sentimentapi.presentation.controller;
 
-import com.project.sentimentapi.domain.port.in.AnalizarTextoUseCase;
-import com.project.sentimentapi.presentation.dto.response.ResponseDto;
-import com.project.sentimentapi.presentation.dto.response.SentimentsResponseDto;
+import com.project.sentimentapi.application.port.in.AnalizarTextoUseCase;
+import com.project.sentimentapi.application.dto.response.ResponseDto;
+import com.project.sentimentapi.application.dto.response.SentimentsResponseDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;

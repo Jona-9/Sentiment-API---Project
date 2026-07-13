@@ -1,11 +1,11 @@
 package com.project.sentimentapi.presentation.controller;
 
-import com.project.sentimentapi.domain.port.in.AutenticarUsuarioUseCase;
-import com.project.sentimentapi.domain.port.in.RecuperarContrasenaUseCase;
-import com.project.sentimentapi.domain.port.in.RegistrarUsuarioUseCase;
-import com.project.sentimentapi.presentation.dto.request.LoginRequestDto;
-import com.project.sentimentapi.presentation.dto.request.RegistroRequestDto;
-import com.project.sentimentapi.presentation.dto.response.LoginResponseDto;
+import com.project.sentimentapi.application.port.in.AutenticarUsuarioUseCase;
+import com.project.sentimentapi.application.port.in.RecuperarContrasenaUseCase;
+import com.project.sentimentapi.application.port.in.RegistrarUsuarioUseCase;
+import com.project.sentimentapi.application.dto.request.LoginRequestDto;
+import com.project.sentimentapi.application.dto.request.RegistroRequestDto;
+import com.project.sentimentapi.application.dto.response.LoginResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

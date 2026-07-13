@@ -1,7 +1,7 @@
 package com.project.sentimentapi.application.mapper;
 
 import com.project.sentimentapi.domain.model.Categoria;
-import com.project.sentimentapi.presentation.dto.response.*;
+import com.project.sentimentapi.application.dto.response.*;
 // MAPPER (capa application). Traduce el modelo de dominio Categoria al DTO CategoriaDto.
 // Utilidad estática sin estado (constructor privado).
 public class CategoriaMapper {
