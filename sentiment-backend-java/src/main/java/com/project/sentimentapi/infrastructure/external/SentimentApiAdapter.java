@@ -1,8 +1,9 @@
 package com.project.sentimentapi.infrastructure.external;
 
 import com.project.sentimentapi.domain.exception.SentimentApiException;
+import com.project.sentimentapi.domain.model.ResultadoSentimiento;
 import com.project.sentimentapi.domain.port.out.SentimentAnalysisPort;
-import com.project.sentimentapi.presentation.dto.response.SentimentsResponseDto;
+import com.project.sentimentapi.application.dto.response.SentimentsResponseDto;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
@@ -10,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClientRequestExceptio
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 // Patrón ADAPTER: convierte SentimentAnalysisPort (dominio) a llamadas reales a la API Python
 // Patrón SINGLETON: el WebClient se inyecta como @Bean (instancia única gestionada por Spring)
@@ -25,15 +27,24 @@ public class SentimentApiAdapter implements SentimentAnalysisPort {
     }
 
     @Override
-    public Optional<SentimentsResponseDto> analizarLote(List<String> textos) {
+    public Optional<List<ResultadoSentimiento>> analizarLote(List<String> textos) {
         try {
+            // SentimentsResponseDto se usa aquí SOLO como forma de transporte para
+            // deserializar el JSON de la API Python; se traduce de inmediato a modelos
+            // de dominio para que el dominio no dependa del contrato externo.
             SentimentsResponseDto respuesta = webClient.post()
                     .uri("/predict/batch")
                     .bodyValue(Map.of("texts", textos))
                     .retrieve()
                     .bodyToMono(SentimentsResponseDto.class)
                     .block();
-            return Optional.ofNullable(respuesta);
+            if (respuesta == null || respuesta.getResults() == null) {
+                return Optional.empty();
+            }
+            List<ResultadoSentimiento> resultados = respuesta.getResults().stream()
+                    .map(r -> new ResultadoSentimiento(r.getPrevision(), r.getProbabilidad()))
+                    .collect(Collectors.toList());
+            return Optional.of(resultados);
         } catch (WebClientRequestException e) {
             // La API Python no está disponible (sin conexión, timeout, etc.)
             throw new SentimentApiException(

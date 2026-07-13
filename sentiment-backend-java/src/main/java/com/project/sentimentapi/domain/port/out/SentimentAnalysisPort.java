@@ -1,6 +1,6 @@
 package com.project.sentimentapi.domain.port.out;
 
-import com.project.sentimentapi.presentation.dto.response.SentimentsResponseDto;
+import com.project.sentimentapi.domain.model.ResultadoSentimiento;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,8 +9,10 @@ import java.util.Optional;
 // analizar sentimientos, sin saber quién lo cumple. Lo implementa SentimentApiAdapter
 // (infrastructure) usando WebClient. Barrera DIP + base del OCP: para cambiar de
 // proveedor de IA se crea otro adapter que implemente este port, sin tocar el use case.
+// Devuelve modelos de dominio (ResultadoSentimiento), no el DTO de transporte de la API,
+// para no acoplar el dominio a la forma del JSON externo.
 public interface SentimentAnalysisPort {
-    // Envía un lote de textos y devuelve la respuesta del modelo; Optional.empty()
-    // o excepción si el servicio externo no responde.
-    Optional<SentimentsResponseDto> analizarLote(List<String> textos);
+    // Envía un lote de textos y devuelve un resultado por texto (mismo orden que la
+    // entrada); Optional.empty() o excepción si el servicio externo no responde.
+    Optional<List<ResultadoSentimiento>> analizarLote(List<String> textos);
 }

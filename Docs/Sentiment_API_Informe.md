@@ -131,10 +131,10 @@ Se adoptará Clean Architecture (Robert C. Martin) adaptada a Spring Boot. La re
               [ infrastructure ] ─────────────┘
 ```
 
-- **domain** — POJOs puros, interfaces de ports, excepciones. Sin imports de Spring ni JPA.
-- **application** — implementaciones de use cases. Solo importa domain.
-- **infrastructure** — JPA adapters, WebClient, email. Implementa los contratos de domain.
-- **presentation** — controllers y DTOs. Llama a los use cases de application.
+- **domain** — POJOs puros, ports de salida (`port/out`), eventos y excepciones. Sin imports de Spring ni JPA.
+- **application** — implementaciones de use cases, ports de entrada (`port/in`), DTOs request/response, mappers y builder. Solo importa domain.
+- **infrastructure** — JPA adapters, WebClient, email, seguridad. Implementa los contratos de domain.
+- **presentation** — controllers y manejo de excepciones HTTP. Llama a los use cases de application.
 
 Con esta estructura, cambiar el proveedor de IA implica crear una nueva clase `OpenAiSentimentAdapter` que implementa `SentimentAnalysisPort`, sin tocar ningún use case. Cambiar de MySQL a MongoDB implica crear nuevos adapters de repositorio, sin tocar el dominio. Los use cases no dependen de Spring ni JPA, por lo que se pueden probar con Mockito sin levantar contexto de aplicación.
 
@@ -143,13 +143,16 @@ Con esta estructura, cambiar el proveedor de IA implica crear una nueva clase `O
 ```
 com.project.sentimentapi/
 ├── domain/
-│   ├── model/       ← Usuario, Producto, Sesion, Comentario (POJOs, sin @Entity)
-│   ├── port/in/     ← RegistrarUsuarioUseCase, AnalizarCsvUseCase, GuardarSesionUseCase…
-│   ├── port/out/    ← UsuarioRepositoryPort, SentimentAnalysisPort, EmailPort…
+│   ├── model/       ← Usuario, Producto, Sesion, Comentario, ResultadoSentimiento (POJOs, sin @Entity)
+│   ├── port/out/    ← UsuarioRepositoryPort, SentimentAnalysisPort, EmailPort, TokenProviderPort…
 │   ├── event/       ← UserRegisteredEvent (POJO puro)
 │   └── exception/   ← UsuarioNoEncontradoException, SentimentApiException…
 ├── application/
 │   ├── usecase/     ← AnalizarCsvUseCaseImpl, RegistrarUsuarioUseCaseImpl…
+│   ├── port/in/     ← RegistrarUsuarioUseCase, AnalizarCsvUseCase, GuardarSesionUseCase… (casos de uso)
+│   ├── dto/
+│   │   ├── request/     ← RegistroRequestDto, LoginRequestDto, CsvUploadRequestDto…
+│   │   └── response/    ← LoginResponseDto, SesionDto, CsvAnalysisResponseDto…
 │   ├── builder/     ← SesionBuilder.java (Patrón Builder)
 │   ├── event/       ← UserRegistrationListener (puede usar Spring aquí)
 │   └── mapper/      ← UsuarioMapper, SesionMapper, ProductoMapper
@@ -160,12 +163,10 @@ com.project.sentimentapi/
 │   │   └── adapter/     ← UsuarioRepositoryAdapter, ProductoRepositoryAdapter…
 │   ├── external/    ← SentimentApiAdapter (implementa SentimentAnalysisPort)
 │   ├── email/       ← EmailAdapter (implementa EmailPort)
-│   ├── security/    ← sin cambios, solo ajustar package
+│   ├── security/    ← JwtUtil (implementa TokenProviderPort), JwtAuthenticationFilter, SecurityConfig
 │   └── config/      ← WebClientConfig @Bean, DataInitializer, EndPointConfg
 └── presentation/
-    ├── controller/      ← ajustar imports para usar use cases
-    ├── dto/request/     ← RegistroRequestDto, LoginRequestDto, CsvUploadRequestDto…
-    ├── dto/response/    ← LoginResponseDto, SesionDto, CsvAnalysisResponseDto…
+    ├── controller/      ← CsvAnalysisController, UsuarioController… (usan los use cases)
     └── exception/       ← GlobalExceptionHandler (mapeado a códigos HTTP)
 ```
 
@@ -187,8 +188,9 @@ public class SentimentApiAdapter implements SentimentAnalysisPort {
     private final WebClient client; // inyectado como @Bean
 
     @Override
-    public Optional<SentimentsResponseDto> analizarLote(List<String> textos) {
-        // lógica de WebClient — el dominio nunca ve estas líneas
+    public Optional<List<ResultadoSentimiento>> analizarLote(List<String> textos) {
+        // lógica de WebClient; el JSON externo se traduce a modelos de dominio
+        // (ResultadoSentimiento) — el dominio nunca ve el DTO de transporte
     }
 }
 ```

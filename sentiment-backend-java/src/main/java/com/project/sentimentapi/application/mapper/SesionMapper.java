@@ -1,7 +1,7 @@
 package com.project.sentimentapi.application.mapper;
 
 import com.project.sentimentapi.domain.model.Sesion;
-import com.project.sentimentapi.presentation.dto.response.*;
+import com.project.sentimentapi.application.dto.response.*;
 // MAPPER (capa application). Traduce el modelo de dominio Sesion al DTO de salida
 // SesionDto que consume el dashboard (historial). Convierte la fecha a String.
 // Utilidad estática sin estado (constructor privado).

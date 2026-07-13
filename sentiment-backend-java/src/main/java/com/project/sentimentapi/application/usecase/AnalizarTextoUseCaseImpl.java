@@ -1,9 +1,10 @@
 package com.project.sentimentapi.application.usecase;
 
-import com.project.sentimentapi.domain.port.in.AnalizarTextoUseCase;
+import com.project.sentimentapi.application.port.in.AnalizarTextoUseCase;
+import com.project.sentimentapi.domain.model.ResultadoSentimiento;
 import com.project.sentimentapi.domain.port.out.SentimentAnalysisPort;
-import com.project.sentimentapi.presentation.dto.response.ResponseDto;
-import com.project.sentimentapi.presentation.dto.response.SentimentsResponseDto;
+import com.project.sentimentapi.application.dto.response.ResponseDto;
+import com.project.sentimentapi.application.dto.response.SentimentsResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class AnalizarTextoUseCaseImpl implements AnalizarTextoUseCase {
     @Override
     public Optional<ResponseDto> analizarTexto(String texto) {
         return sentimentPort.analizarLote(List.of(texto))
-                .map(r -> r.getResults().get(0));
+                .map(resultados -> toResponseDto(resultados.get(0)));
     }
 
     // CORRECCIÓN BUG 1: antes se enviaba List.of(texto) — un solo elemento sin importar
@@ -38,6 +39,18 @@ public class AnalizarTextoUseCaseImpl implements AnalizarTextoUseCase {
 
         if (textos.isEmpty()) return Optional.empty();
 
-        return sentimentPort.analizarLote(textos);
+        return sentimentPort.analizarLote(textos).map(this::toSentimentsResponseDto);
+    }
+
+    // Mapea los modelos de dominio al DTO de salida que consume el frontend.
+    private SentimentsResponseDto toSentimentsResponseDto(List<ResultadoSentimiento> resultados) {
+        SentimentsResponseDto dto = new SentimentsResponseDto();
+        dto.setResults(resultados.stream().map(this::toResponseDto).collect(Collectors.toList()));
+        dto.setTotal(resultados.size());
+        return dto;
+    }
+
+    private ResponseDto toResponseDto(ResultadoSentimiento r) {
+        return new ResponseDto(r.getPrevision(), r.getProbabilidad());
     }
 }

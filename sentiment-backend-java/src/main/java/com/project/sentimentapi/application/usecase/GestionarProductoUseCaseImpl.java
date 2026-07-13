@@ -1,10 +1,10 @@
 package com.project.sentimentapi.application.usecase;
 
 import com.project.sentimentapi.domain.model.Producto;
-import com.project.sentimentapi.domain.port.in.GestionarProductoUseCase;
+import com.project.sentimentapi.application.port.in.GestionarProductoUseCase;
 import com.project.sentimentapi.domain.port.out.ProductoRepositoryPort;
-import com.project.sentimentapi.presentation.dto.response.ProductoDto;
-import com.project.sentimentapi.presentation.dto.request.ProductoRequestDto;
+import com.project.sentimentapi.application.dto.response.ProductoDto;
+import com.project.sentimentapi.application.dto.request.ProductoRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

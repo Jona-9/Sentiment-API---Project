@@ -1,7 +1,7 @@
 package com.project.sentimentapi.application.mapper;
 
 import com.project.sentimentapi.domain.model.Usuario;
-import com.project.sentimentapi.presentation.dto.response.UserDto;
+import com.project.sentimentapi.application.dto.response.UserDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -68,13 +68,14 @@ Ese CSV de María **atraviesa cada patrón**; en cada slide se muestra "qué le 
 ```
 com.project.sentimentapi/
 ├── domain/            ← el núcleo: NO conoce Spring ni JPA
-│   ├── model/         ← Usuario, Producto, Sesion, Comentario (POJOs, sin @Entity)
-│   ├── port/in/       ← AnalizarCsvUseCase, RegistrarUsuarioUseCase…  (contratos de entrada)
-│   ├── port/out/      ← SentimentAnalysisPort, ProductoRepositoryPort, EmailPort…  (contratos de salida)
+│   ├── model/         ← Usuario, Producto, Sesion, Comentario, ResultadoSentimiento (POJOs, sin @Entity)
+│   ├── port/out/      ← SentimentAnalysisPort, ProductoRepositoryPort, EmailPort, TokenProviderPort…  (contratos de salida)
 │   ├── event/         ← UserRegisteredEvent (POJO puro → Observer)
 │   └── exception/     ← UsuarioNoEncontradaException, SentimentApiException…
 ├── application/       ← orquesta el negocio; solo depende de domain
 │   ├── usecase/       ← AnalizarCsvUseCaseImpl (Facade), RegistrarUsuarioUseCaseImpl…
+│   ├── port/in/       ← AnalizarCsvUseCase, RegistrarUsuarioUseCase…  (contratos de entrada / casos de uso)
+│   ├── dto/{request,response}/ ← RegistroRequestDto, LoginResponseDto, SesionDto…
 │   ├── builder/       ← SesionBuilder (Patrón Builder)
 │   ├── event/         ← UserRegistrationListener (Observer)
 │   └── mapper/        ← UsuarioMapper, SesionMapper, ProductoMapper
@@ -82,12 +83,10 @@ com.project.sentimentapi/
 │   ├── persistence/{entity, repository, adapter}   ← JPA + *RepositoryAdapter (Adapter)
 │   ├── external/      ← SentimentApiAdapter (implementa SentimentAnalysisPort)
 │   ├── email/         ← EmailAdapter (implementa EmailPort)
-│   ├── security/      ← JWT (JwtUtil, filtro, SecurityConfig)
+│   ├── security/      ← JWT (JwtUtil implementa TokenProviderPort, filtro, SecurityConfig)
 │   └── config/        ← WebClientConfig @Bean (Singleton), EndPointConfg, DataInitializer
 └── presentation/      ← la puerta HTTP; llama a los use cases
     ├── controller/    ← CsvAnalysisController, UsuarioController…  (Controller GRASP)
-    ├── dto/request/   ← RegistroRequestDto, LoginRequestDto, CsvEntradaDto…
-    ├── dto/response/  ← LoginResponseDto, SesionDto, CsvAnalysisResponseDto…
     └── exception/     ← GlobalExceptionHandler (excepciones → códigos HTTP)
 ```
 

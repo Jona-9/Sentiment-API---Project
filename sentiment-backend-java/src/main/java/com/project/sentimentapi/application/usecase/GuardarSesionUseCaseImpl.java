@@ -2,9 +2,9 @@ package com.project.sentimentapi.application.usecase;
 
 import com.project.sentimentapi.application.mapper.SesionMapper;
 import com.project.sentimentapi.domain.model.Sesion;
-import com.project.sentimentapi.domain.port.in.GuardarSesionUseCase;
+import com.project.sentimentapi.application.port.in.GuardarSesionUseCase;
 import com.project.sentimentapi.domain.port.out.SesionRepositoryPort;
-import com.project.sentimentapi.presentation.dto.response.SesionDto;
+import com.project.sentimentapi.application.dto.response.SesionDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

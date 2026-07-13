@@ -1,9 +1,9 @@
 package com.project.sentimentapi.application.usecase;
 
 import com.project.sentimentapi.domain.model.Categoria;
-import com.project.sentimentapi.domain.port.in.GestionarCategoriaUseCase;
+import com.project.sentimentapi.application.port.in.GestionarCategoriaUseCase;
 import com.project.sentimentapi.domain.port.out.CategoriaRepositoryPort;
-import com.project.sentimentapi.presentation.dto.response.*;
+import com.project.sentimentapi.application.dto.response.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

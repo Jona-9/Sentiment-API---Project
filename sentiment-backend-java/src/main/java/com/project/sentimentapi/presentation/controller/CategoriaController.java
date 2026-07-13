@@ -1,7 +1,7 @@
 package com.project.sentimentapi.presentation.controller;
 
-import com.project.sentimentapi.domain.port.in.GestionarCategoriaUseCase;
-import com.project.sentimentapi.presentation.dto.response.CategoriaDto;
+import com.project.sentimentapi.application.port.in.GestionarCategoriaUseCase;
+import com.project.sentimentapi.application.dto.response.CategoriaDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

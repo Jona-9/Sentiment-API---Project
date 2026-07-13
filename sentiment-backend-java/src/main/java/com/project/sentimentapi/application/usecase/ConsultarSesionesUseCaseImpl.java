@@ -4,11 +4,11 @@ import com.project.sentimentapi.application.mapper.SesionMapper;
 import com.project.sentimentapi.domain.exception.SesionNoEncontradaException;
 import com.project.sentimentapi.domain.model.Comentario;
 import com.project.sentimentapi.domain.model.Sesion;
-import com.project.sentimentapi.domain.port.in.ConsultarSesionesUseCase;
+import com.project.sentimentapi.application.port.in.ConsultarSesionesUseCase;
 import com.project.sentimentapi.domain.port.out.ComentarioRepositoryPort;
 import com.project.sentimentapi.domain.port.out.SesionRepositoryPort;
-import com.project.sentimentapi.presentation.dto.response.ComentarioDto;
-import com.project.sentimentapi.presentation.dto.response.SesionDto;
+import com.project.sentimentapi.application.dto.response.ComentarioDto;
+import com.project.sentimentapi.application.dto.response.SesionDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

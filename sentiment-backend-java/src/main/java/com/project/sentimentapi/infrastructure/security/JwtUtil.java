@@ -1,5 +1,6 @@
 package com.project.sentimentapi.infrastructure.security;
 
+import com.project.sentimentapi.domain.port.out.TokenProviderPort;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,11 +13,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-// UTILIDAD DE SEGURIDAD (capa infrastructure). Encapsula la creación y verificación
-// de tokens JWT (JSON Web Token). Aísla la librería jjwt del resto del sistema: los
-// use cases solo llaman generateToken/validateToken sin conocer los detalles.
+// ADAPTER DE SEGURIDAD (capa infrastructure). Encapsula la creación y verificación
+// de tokens JWT (JSON Web Token). Aísla la librería jjwt del resto del sistema.
+// Implementa TokenProviderPort (puerto de salida del dominio): el use case de login
+// depende de la abstracción, no de esta clase concreta (DIP).
 @Component
-public class JwtUtil {
+public class JwtUtil implements TokenProviderPort {
 
     // Clave secreta para firmar/verificar (se lee de application.properties: nunca hardcodeada)
     @Value("${jwt.secret}")
@@ -32,7 +34,8 @@ public class JwtUtil {
     }
 
     // Genera un token firmado para un usuario tras un login correcto.
-    public String generateToken(String correo, Integer usuarioId) {
+    @Override
+    public String generarToken(String correo, Integer usuarioId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("usuarioId", usuarioId);        // dato extra dentro del token (payload)
         return Jwts.builder()
